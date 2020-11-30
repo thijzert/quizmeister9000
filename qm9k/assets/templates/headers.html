@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Quizmeister9000</title>
+		<meta charset="utf-8" />
+
+		<link rel="stylesheet" href="{{.AssetLocation}}/dist/css/qm9k.css" />
+		{{if .PageCSS}}<link rel="stylesheet" href="{{.AssetLocation}}/dist/css/pages/{{.PageCSS}}.css" />{{end}}
+
+		<script type="module" src="{{.AssetLocation}}/dist/js/qm9k.js"></script>
+		<script nomodule src="{{.AssetLocation}}/dist/ancient-js/qm9k.js"></script>
+
+		<base href="{{.AppRoot}}" />
+	</head>
+	<body>
+		<nav class="main-nav">
+			<section class="-brand"><a href="{{.AppRoot}}">Quizmeister9000</a></section>
+			<section class="-login">
+				{{if and .Session .Session.Nick}}<strong>Hello, {{.Session.Nick}}!</strong>{{end}}
+			</section>
+		</nav>
+
+{{template `contents` .}}
+
+	</body>
+</html>

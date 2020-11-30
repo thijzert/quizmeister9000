@@ -1,0 +1,89 @@
+{{define `contents`}}
+
+<main class="ui-showcase">
+
+	<section class="-buttons">
+		<h2>Buttons</h2>
+		<div>
+			<div>
+				<div><a class="tfbutton">Naturel</a></div>
+				<div><a class="tfbutton -accent -ripple">-ripple</a></div>
+				<div><a class="tfbutton -accent -disabled">-disabled</a></div>
+				<div><a class="tfbutton -main">main</a></div>
+				<div><a class="tfbutton -alt">alt</a></div>
+				<div><a class="tfbutton -transparent">transparent</a></div>
+				<div><a class="tfbutton -accent">accent</a></div>
+				<div><a class="tfbutton -accent-alt">accent-alt</a></div>
+				<div><a class="tfbutton -light"><span>light</span><i>9,-</i></a></div>
+			</div>
+
+			<div>
+				<div><a class="tfbutton -white -accent">-accent -white</a></div>
+				<div><a class="tfbutton -white -accent-alt">-accent-alt -white</a></div>
+				<div><a class="tfbutton -white -accent -disabled">-disabled -white</a></div>
+				<div><a class="tfbutton -white -main">-main -white</a></div>
+				<div><a class="tfbutton -white -alt">-alt -white</a></div>
+			</div>
+
+			<div>
+				<div><a class="tfbutton -i25 -play" title="-i25 -play"></a></div>
+				<div><a class="tfbutton -h25">-h25</a></div>
+				<div><a class="tfbutton -i30 -play" title="-i30 -play"></a></div>
+				<div><a class="tfbutton -h30">-h30</a></div>
+				<div><a class="tfbutton -i40 -play" title="-i40 -play"></a></div>
+				<div><a class="tfbutton -h40">-h40</a></div>
+				<div><a class="tfbutton -i50 -play" title="-i50 -play"></a></div>
+				<div><a class="tfbutton -h50">-h50</a></div>
+			</div>
+
+			<div>
+				<div class="-wide"><a class="tfbutton -fullwidth -h30">-h30 -fullwidth</a></div>
+				<div class="-wide"><a class="tfbutton -fullwidth -h40">-h40 -fullwidth</a></div>
+				<div class="-wide"><a class="tfbutton -fullwidth -h50">-h50 -fullwidth</a></div>
+				<div class="-wide"><a class="tfbutton -i30 -fullwidth -play" title="-i30 -fullwidth -play"></a></div>
+				<div class="-wide"><a class="tfbutton -i40 -fullwidth -play" title="-i40 -fullwidth -play"></a></div>
+				<div class="-wide"><a class="tfbutton -i50 -fullwidth -play" title="-i50 -fullwidth -play"></a></div>
+			</div>
+
+			<div>
+				<div><a class="tfbutton -play">-play</a></div>
+				<div><a class="tfbutton -pause">-pause</a></div>
+				<div><a class="tfbutton -audio">-audio</a></div>
+				<div><a class="tfbutton -check">-check</a></div>
+				<div><a class="tfbutton -trash">-trash</a></div>
+				<div><a class="tfbutton -download">-download</a></div>
+				<div><a class="tfbutton -upload">-upload</a></div>
+				<div><a class="tfbutton -share">-share</a></div>
+				<div><a class="tfbutton -plus">-plus</a></div>
+			</div>
+
+			<div>
+				<div><a class="tfbutton -transparent -arrow-left">-arrow-left</a></div>
+				<div><a class="tfbutton -transparent -arrow-right"><span>-arrow-right</span></a></div>
+				<div><a class="tfbutton -transparent -chevron-left">-chevron-left</a></div>
+				<div><a class="tfbutton -transparent -chevron-right"><span>-chevron-right</span></a></div>
+			</div>
+		</div>
+	</section>
+
+	<section class="-colours">
+		<h2>Colour palette</h2>
+
+		<div class="-ramp -col-ui-main">{{template `colour-ramp`}}</div>
+		<div class="-ramp -col-ui-alt">{{template `colour-ramp`}}</div>
+		<div class="-ramp -col-ui-accent-main">{{template `colour-ramp`}}</div>
+		<div class="-ramp -col-ui-accent-alt">{{template `colour-ramp`}}</div>
+	</section>
+
+</main>
+
+{{end}}
+
+{{define `colour-ramp`}}
+<span class="-light">light text</span>
+<span class="-dark">dark text</span>
+<span class="-solid"></span>
+<span class="-astext">as text</span>
+<span class="-border">border</span>
+<span class="-border -thick">border</span>
+{{end}}

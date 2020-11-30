@@ -1,0 +1,77 @@
+
+@import "../mixins/config";
+@import "../mixins/responsive";
+@import "../mixins/colour-macro";
+
+main.ui-showcase {
+
+	section.-buttons {
+		> div {
+			display: flex;
+			flex-wrap: wrap;
+			> div {
+				display: flex;
+				flex-wrap: wrap;
+				max-width: 36rem;
+				height: min-content;
+
+				> div {
+					margin-bottom: 10px;
+					margin-right: 10px;
+
+					&.-wide {
+						width: 25rem;
+					}
+				}
+			}
+		}
+	}
+
+	section.-colours {
+		.-ramp {
+			margin-bottom: 0.5rem;
+
+			span {
+				display: inline-block;
+				padding: 0.75rem 1.5rem;
+				margin-right: 1rem;
+			}
+			.-light {
+				@include text-colour( light );
+			}
+			.-dark {
+				@include text-colour( dark );
+			}
+			.-solid {
+				min-width: 1rem;
+			}
+			.-border {
+				border: 0.0625rem solid #ccc;
+				&.-thick {
+					border-width: 0.25rem;
+				}
+			}
+		}
+
+		.-col-ui-main {
+			.-light, .-dark, .-solid { @include background-colour( ui-main ); }
+			.-astext { @include text-colour( ui-main ); }
+			.-border { @include border-colour( ui-main ); }
+		}
+		.-col-ui-alt {
+			.-light, .-dark, .-solid { @include background-colour( ui-alt ); }
+			.-astext { @include text-colour( ui-alt ); }
+			.-border { @include border-colour( ui-alt ); }
+		}
+		.-col-ui-accent-main {
+			.-light, .-dark, .-solid { @include background-colour( ui-accent-main ); }
+			.-astext { @include text-colour( ui-accent-main ); }
+			.-border { @include border-colour( ui-accent-main ); }
+		}
+		.-col-ui-accent-alt {
+			.-light, .-dark, .-solid { @include background-colour( ui-accent-alt ); }
+			.-astext { @include text-colour( ui-accent-alt ); }
+			.-border { @include border-colour( ui-accent-alt ); }
+		}
+	}
+}
