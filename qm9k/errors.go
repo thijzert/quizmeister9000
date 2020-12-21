@@ -102,7 +102,7 @@ func UserMessage(e error) string {
 	}
 }
 
-func (s *Server) errorHandler(e error, w http.ResponseWriter, r *http.Request) {
+func (s *Server) Error(w http.ResponseWriter, r *http.Request, e error) {
 	if e == nil {
 		w.Write([]byte("No errors were found."))
 		return

@@ -167,8 +167,6 @@ func watchSourceTree(paths []string, fileFilter []string, childJob job) job {
 			log.Printf("Source change detected - rebuilding")
 			cancel()
 		}
-		sth := sourceTreeHash(paths, fileFilter)
-		return errors.Errorf("source tree hash: '%s'", sth)
 	}
 }
 

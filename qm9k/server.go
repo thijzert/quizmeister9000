@@ -1,8 +1,11 @@
 package qm9k
 
 import (
+	"html/template"
 	"net/http"
 	"sync"
+
+	"github.com/thijzert/quizmeister9000/qm9k/handlers"
 )
 
 // A Config represents configuration parameters for the Server
@@ -18,6 +21,8 @@ type Server struct {
 
 	// handle HTTP stuff
 	mux *http.ServeMux
+
+	parsedTemplates map[string]*template.Template
 }
 
 // NewServer instantiates a new Server instance based on the configuration
@@ -28,29 +33,24 @@ func NewServer(c Config) (*Server, error) {
 		mux:          http.NewServeMux(),
 	}
 
-	s.mux.HandleFunc("/party/", s.serveChat)
-	s.mux.HandleFunc("/assets/", serveAsset)
-	s.mux.HandleFunc("/", s.homeHandler)
+	// s.mux.HandleFunc("/party/", s.serveChat)
+	s.mux.HandleFunc("/assets/", s.serveStaticAsset)
+	// s.mux.HandleFunc("/", s.homeHandler)
+	s.mux.Handle("/", s.HTMLFunc(handlers.HomeHandler, handlers.HomeDecoder, "full/home"))
 
 	if !assetsEmbedded {
 		// FIXME: find a nicer way of detecting a development version
-		s.mux.HandleFunc("/ui-showcase", s.uishowcaseHandler)
+		s.mux.Handle("/ui-showcase", s.HTMLFunc(handlers.UIShowcaseHandler, handlers.UIShowcaseDecoder, "full/ui-showcase"))
 	}
 
 	return s, nil
 }
 
-func (s *Server) homeHandler(w http.ResponseWriter, r *http.Request) {
-	var homeData struct {
-	}
-
-	s.executeTemplate("home", homeData, w, r)
+func (s *Server) getState() handlers.State {
+	return handlers.State{}
 }
 
-func (s *Server) uishowcaseHandler(w http.ResponseWriter, r *http.Request) {
-	s.executeTemplate("ui-showcase", nil, w, r)
-}
-
-func (s *Server) serveChat(w http.ResponseWriter, r *http.Request) {
-	s.executeTemplate("chat", struct{}{}, w, r)
+// setState writes back any modified fields to the global state
+func (s *Server) setState(handlers.State) error {
+	return nil
 }
