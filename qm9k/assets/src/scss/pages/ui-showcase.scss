@@ -5,6 +5,24 @@
 
 main.ui-showcase {
 
+	section.-avatars {
+		> div {
+			display: flex;
+			flex-wrap: wrap;
+
+			> div {
+				width: 10rem;
+				text-align: center;
+				margin: 0.25rem;
+
+				svg {
+					display: block;
+					width: 3rem;
+				}
+			}
+		}
+	}
+
 	section.-buttons {
 		> div {
 			display: flex;
