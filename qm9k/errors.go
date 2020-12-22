@@ -9,78 +9,15 @@ import (
 	"net/url"
 	"strconv"
 	"unicode/utf8"
+
+	"github.com/thijzert/quizmeister9000/qm9k/weberrors"
 )
-
-type httpError struct {
-	StatusCode int
-	Cause      error
-}
-
-func errorWithStatus(e error, c int) error {
-	if e == nil {
-		return nil
-	}
-
-	return httpError{
-		StatusCode: c,
-		Cause:      e,
-	}
-}
-
-func (e httpError) Error() string {
-	return e.Cause.Error()
-}
-
-func (e httpError) Unwrap() error {
-	return e.Cause
-}
-
-// A UserError is an error that may be shown to end users
-type UserError interface {
-	error
-	Headline() string
-	Message() string
-}
-
-type userError struct {
-	headline string
-	message  string
-	cause    error
-}
-
-func errorWithMessage(e error, headline, message string) error {
-	if e == nil {
-		return nil
-	}
-
-	return userError{
-		headline: headline,
-		message:  message,
-		cause:    e,
-	}
-}
-
-func (e userError) Error() string {
-	return e.headline + ": " + e.message
-}
-
-func (e userError) Unwrap() error {
-	return e.cause
-}
-
-func (e userError) Headline() string {
-	return e.headline
-}
-
-func (e userError) Message() string {
-	return e.message
-}
 
 // UserHeadline returns the user-visible headline for an error, if it exists
 func UserHeadline(e error) string {
 	if e == nil {
 		return ""
-	} else if ue, ok := e.(UserError); ok {
+	} else if ue, ok := e.(weberrors.UserError); ok {
 		return ue.Headline()
 	} else if c := errors.Unwrap(e); c != nil {
 		return UserHeadline(c)
@@ -93,7 +30,7 @@ func UserHeadline(e error) string {
 func UserMessage(e error) string {
 	if e == nil {
 		return ""
-	} else if ue, ok := e.(UserError); ok {
+	} else if ue, ok := e.(weberrors.UserError); ok {
 		return ue.Message()
 	} else if c := errors.Unwrap(e); c != nil {
 		return UserMessage(c)
@@ -108,23 +45,16 @@ func (s *Server) Error(w http.ResponseWriter, r *http.Request, e error) {
 		return
 	}
 
-	httpcode := httpError{
-		StatusCode: 400,
-		Cause:      e,
-	}
-	if !errors.As(e, &httpcode) {
-		httpcode.StatusCode = 400
-		httpcode.Cause = e
-	}
+	httpstatus, cause := weberrors.HTTPStatusCode(e)
 
 	log.Print(e)
-	w.WriteHeader(400)
+	w.WriteHeader(httpstatus)
 	w.Header()["Content-Type"] = []string{"text/plain"}
 	w.Write([]byte("TODO: better error handling\n"))
 
 	if !assetsEmbedded {
 		// FIXME: find a nicer way of detecting a development version
-		w.Write([]byte(e.Error()))
+		w.Write([]byte(cause.Error()))
 	}
 }
 
