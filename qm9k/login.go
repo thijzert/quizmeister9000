@@ -4,10 +4,15 @@ import (
 	"context"
 	"crypto/rand"
 	"encoding/hex"
+	"encoding/json"
 	"io"
 	"log"
 	"net/http"
+	"os"
+	"path"
 	"time"
+
+	"github.com/thijzert/quizmeister9000/qm9k/handlers"
 )
 
 type SessionID string
@@ -28,17 +33,19 @@ const (
 type Session struct {
 	ID SessionID
 
-	// The username of the user currently logged in. May be empty.
-	Nick string `gorm:"type:varchar(100);index"`
+	UserID handlers.UserID
 
 	CreatedAt time.Time
 	DeletedAt *time.Time
 }
 
 func newSession() *Session {
-	return &Session{
-		ID: newSessionID(),
+	rv := &Session{
+		ID:     newSessionID(),
+		UserID: handlers.NewUserID(),
 	}
+
+	return rv
 }
 
 // MaybeSession gets the session object for this request, if present.
@@ -99,14 +106,120 @@ func (s *Server) getSession(id SessionID) *Session {
 	s.sessionLock.Lock()
 	defer s.sessionLock.Unlock()
 
-	return s.sessionStore[id]
+	rv, ok := s.sessionStore[id]
+	if !ok {
+		return nil
+	}
+
+	if rv.UserID.Empty() {
+		rv.UserID = handlers.NewUserID()
+		s.sessionStore[id] = rv
+	}
+
+	return rv
+}
+
+func (s *Server) initialiseSessionStore() error {
+	s.sessionLock.Lock()
+	defer s.sessionLock.Unlock()
+
+	s.sessionStore = make(map[SessionID]*Session)
+	f, err := os.Open(path.Join(s.config.BDFATFJF, "session-store.json"))
+	defer f.Close()
+	if err != nil {
+		if os.IsNotExist(err) {
+			return nil
+		}
+		return err
+	}
+	dec := json.NewDecoder(f)
+	err = dec.Decode(&s.sessionStore)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func (s *Server) saveSession(ses *Session) {
-	if ses != nil {
-		s.sessionLock.Lock()
-		defer s.sessionLock.Unlock()
-
-		s.sessionStore[ses.ID] = ses
+	if ses == nil {
+		return
 	}
+
+	s.sessionLock.Lock()
+	defer s.sessionLock.Unlock()
+
+	s.sessionStore[ses.ID] = ses
+
+	// TODO: swap out for proper database
+	f, err := os.Create(path.Join(s.config.BDFATFJF, "session-store.json"))
+	defer f.Close()
+	if err != nil {
+		log.Printf("error saving session store: %s", err)
+		return
+	}
+	enc := json.NewEncoder(f)
+	enc.Encode(s.sessionStore)
+}
+
+func (s *Server) getUser(id handlers.UserID) (handlers.User, bool) {
+	if id.Empty() {
+		return handlers.User{}, false
+	}
+
+	s.userLock.RLock()
+	defer s.userLock.RUnlock()
+
+	u, ok := s.userStore[id]
+	u.UserID = id
+	return u, ok
+}
+
+func (s *Server) initialiseUserStore() error {
+	s.userLock.Lock()
+	defer s.userLock.Unlock()
+
+	s.userStore = make(map[handlers.UserID]handlers.User)
+	f, err := os.Open(path.Join(s.config.BDFATFJF, "user-store.json"))
+	defer f.Close()
+	if err != nil {
+		if os.IsNotExist(err) {
+			return nil
+		}
+		return err
+	}
+	dec := json.NewDecoder(f)
+	err = dec.Decode(&s.userStore)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (s *Server) saveUser(u handlers.User) {
+	if u.UserID.Empty() {
+		return
+	}
+
+	s.userLock.Lock()
+	defer s.userLock.Unlock()
+
+	currentU, ok := s.userStore[u.UserID]
+	if ok {
+		if currentU == u {
+			return
+		}
+	}
+
+	log.Printf("saving user %+v", u)
+	s.userStore[u.UserID] = u
+
+	// TODO: swap out for proper database
+	f, err := os.Create(path.Join(s.config.BDFATFJF, "user-store.json"))
+	defer f.Close()
+	if err != nil {
+		log.Printf("error saving session store: %s", err)
+		return
+	}
+	enc := json.NewEncoder(f)
+	enc.Encode(s.userStore)
 }

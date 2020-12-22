@@ -82,6 +82,7 @@ func (h htmlHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		AssetLocation string
 		PageCSS       string
 		Session       *Session
+		CurrentUser   handlers.User
 		Request       handlers.Request
 		Response      handlers.Response
 	}{
@@ -99,6 +100,13 @@ func (h htmlHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	if _, err := getAsset(path.Join("dist", "css", "pages", cssName+".css")); err == nil {
 		tpData.PageCSS = cssName
+	}
+
+	if !tpData.Session.UserID.Empty() {
+		u, ok := h.Server.getUser(tpData.Session.UserID)
+		if ok {
+			tpData.CurrentUser = u
+		}
 	}
 
 	var b bytes.Buffer

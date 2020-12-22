@@ -22,7 +22,7 @@
 		<nav class="main-nav">
 			<section class="-brand"><a href="{{.AppRoot}}">Quizmeister9000</a></section>
 			<section class="-login">
-				{{if and .Session .Session.Nick}}<strong>Hello, {{.Session.Nick}}!</strong>{{end}}
+				{{if and .Session .CurrentUser.Nick}}<strong>Hello, {{.CurrentUser.Nick}}!</strong>{{end}}
 			</section>
 		</nav>
 

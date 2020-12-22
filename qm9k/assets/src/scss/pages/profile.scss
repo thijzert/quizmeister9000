@@ -1,0 +1,24 @@
+@import "../mixins/config";
+@import "../mixins/responsive";
+@import "../mixins/colour-macro";
+
+main.profile {
+	section {
+		display: flex;
+		flex-direction: column;
+		> * {
+			width: 20rem;
+		}
+	}
+
+	fieldset {
+		border: 0;
+		padding: 0;
+		margin-bottom: 1.25rem;
+
+		label {
+			display: block;
+			margin-bottom: 0.25rem;
+		}
+	}
+}
