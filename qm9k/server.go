@@ -46,7 +46,7 @@ func NewServer(c Config) (*Server, error) {
 	return s, nil
 }
 
-func (s *Server) getState() handlers.State {
+func (s *Server) getState(r *http.Request) handlers.State {
 	return handlers.State{}
 }
 

@@ -47,7 +47,7 @@ func (h htmlHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	state := h.Server.getState()
+	state := h.Server.getState(r)
 	newState, resp, err := h.Handler(state, req)
 	if err != nil {
 		h.Error(w, r, err)

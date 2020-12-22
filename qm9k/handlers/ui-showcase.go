@@ -3,7 +3,7 @@ package handlers
 import "net/http"
 
 // UIShowcaseDecoder decodes a request for the home page
-func UIShowcaseDecoder(r *http.Request) (Request, error) {
+func UIShowcaseDecoder(*http.Request) (Request, error) {
 	return emptyRequest{}, nil
 }
 

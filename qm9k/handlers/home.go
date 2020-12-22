@@ -7,7 +7,7 @@ type emptyRequest struct{}
 func (emptyRequest) FlaggedAsRequest() {}
 
 // HomeDecoder decodes a request for the home page
-func HomeDecoder(r *http.Request) (Request, error) {
+func HomeDecoder(*http.Request) (Request, error) {
 	return emptyRequest{}, nil
 }
 
