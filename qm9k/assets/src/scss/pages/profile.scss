@@ -2,23 +2,55 @@
 @import "../mixins/responsive";
 @import "../mixins/colour-macro";
 
+body {
+	@include background-colour( dark );
+}
+
 main.profile {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+
 	section {
-		display: flex;
-		flex-direction: column;
-		> * {
+		width: 23rem;
+		padding: 1.5rem;
+		@include background-colour( ui-background );
+
+		input[type=text], select {
 			width: 20rem;
+		}
+		.tfbutton {
+			margin-bottom: 0.5rem;
 		}
 	}
 
 	fieldset {
 		border: 0;
 		padding: 0;
-		margin-bottom: 1.25rem;
+		margin-bottom: 1.75rem;
+
+		&:last-child {
+			margin-bottom: unset;
+		}
 
 		label {
 			display: block;
 			margin-bottom: 0.25rem;
+		}
+
+		input[type=text], select {
+			border-width: 0.0625rem;
+			border-style: solid;
+			border-radius: 0.1875rem;
+			padding: 0.75rem 1.25rem;
+			box-sizing: border-box;
+			@include border-colour( ui-main );
+
+			&:active {
+				@include border-colour( ui-main-act );
+				box-shadow: 0 0 0.25rem 0 rgba(map-get( $colour-descriptors, ui-main ),0.8);
+				box-shadow: 0 0 0.25rem 0 rgba(var( --colour-ui-main ),0.8);
+			}
 		}
 	}
 }

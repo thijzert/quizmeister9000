@@ -3,44 +3,42 @@
 <main class="profile">
 
 	<section>
-		{{if .Response.Changed}}
-		<p>Aye; ye may pass.</p>
-		{{else}}
-		<p>Who would pass the page of landing must answer me these questions three, ere the other side he see.</p>
-		{{end}}
-		{{$cp := .Response.CurrentProfile}}
-		<form method="POST" action="{{.AppRoot}}profile">
-			<fieldset>
-				<label for="nick">What is your name?</label>
-				<div><input type="text" name="nick" value="{{$cp.Nick}}" /></div>
-			</fieldset>
-			<fieldset>
-				<label for="quest">What is your quest?</label>
-				<div><input type="text" name="quest" value="{{$cp.Quest}}" /></div>
-			</fieldset>
-			<fieldset>
-				<label for="colour">What is your favourite colour?</label>
-				<div>
-					<select name="colour">
-						<option value="a8a8a8">-</option>
-						{{range $i, $c := .Response.AllColours}}
-							{{if eq ($c.Hex) ($cp.Colour)}}
-								<option selected value="{{$c.Hex}}">
-							{{else}}
-								<option value="{{$c.Hex}}">
+		<div>
+			{{if .Response.Changed}}
+			<p>Aye; ye may pass.</p>
+			{{else}}
+			<p>Who would pass the page of landing must answer me these questions three, ere the other side he see.</p>
+			{{end}}
+			{{$cp := .Response.CurrentProfile}}
+			<form method="POST" action="{{.AppRoot}}profile">
+				<fieldset>
+					<label for="nick">What is your name?</label>
+					<div><input type="text" name="nick" value="{{$cp.Nick}}" /></div>
+				</fieldset>
+				<fieldset>
+					<label for="quest">What is your quest?</label>
+					<div><input type="text" name="quest" value="{{$cp.Quest}}" /></div>
+				</fieldset>
+				<fieldset>
+					<label for="colour">What is your favourite colour?</label>
+					<div>
+						<select class="kleurstaal" name="colour">
+							<option value="a8a8a8">-</option>
+							{{range $i, $c := .Response.AllColours}}
+								<option {{if eq ($c.Hex) ($cp.Colour)}}selected{{end}} value="{{$c.Hex}}">{{$c.Name}}</option>
 							{{end}}
-							<span class="kleurstaal" style="background-color: {{$c.Hex}}"></span> {{$c.Name}}</option>
-						{{end}}
-					</select>
-				</div>
-			</fieldset>
-			<fieldset>
-				<div>
-					<input type="hidden" name="save" value="1" />
-					<input type="submit" value="Save" />
-				</div>
-			</fieldset>
-		</form>
+						</select>
+					</div>
+				</fieldset>
+				<fieldset>
+					<div>
+						<input type="hidden" name="save" value="1" />
+						<input class="tfbutton -h50 -fullwidth" type="submit" value="Save" />
+						<a href="{{.AppRoot}}" class="tfbutton -transparent -h50 -fullwidth">Back</a>
+					</div>
+				</fieldset>
+			</form>
+		</div>
 	</section>
 
 </main>

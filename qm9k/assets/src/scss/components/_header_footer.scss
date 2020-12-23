@@ -13,9 +13,25 @@ nav.main-nav {
 	.-brand {
 		font-size: 1.25rem;
 		@include font-heading();
+	}
+
+	.-brand, .-login {
 		a, a:hover, a:active {
 			@include text-colour( ui-text );
 			text-decoration: none;
 		}
+	}
+
+	.-login .-avatar {
+		$avatar-size: 1.75rem;
+		display: inline-block;
+		width: $avatar-size;
+		height: $avatar-size;
+		border-style: solid;
+		border-width: 0.0625rem;
+		@include border-colour( light );
+		border-radius: 0.5 * $avatar-size;
+
+		margin-bottom: -0.25 * $avatar-size;
 	}
 }

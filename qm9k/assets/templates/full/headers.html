@@ -22,7 +22,13 @@
 		<nav class="main-nav">
 			<section class="-brand"><a href="{{.AppRoot}}">Quizmeister9000</a></section>
 			<section class="-login">
-				{{if and .Session .CurrentUser.Nick}}<strong>Hello, {{.CurrentUser.Nick}}!</strong>{{end}}
+				{{if and .Session .CurrentUser.Nick}}
+					<a href="{{.AppRoot}}profile">Hello, <strong>{{.CurrentUser.Nick}}!</strong>
+					{{if .CurrentUser.Colour}}
+						<svg class="-avatar"><use fill="#{{.CurrentUser.Colour}}" xlink:href="#avatar-neutral"/></svg>
+					{{end}}
+					</a>
+				{{end}}
 			</section>
 		</nav>
 

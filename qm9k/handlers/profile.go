@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"log"
 	"net/http"
 )
 
@@ -29,8 +28,6 @@ func ProfileDecoder(r *http.Request) (Request, error) {
 		rv.NewUser.Quest = r.PostFormValue("quest")
 		rv.NewUser.Colour = r.PostFormValue("colour")
 	}
-
-	log.Printf("profile request: %+v", rv)
 
 	return rv, nil
 }
