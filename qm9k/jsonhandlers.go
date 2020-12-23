@@ -12,16 +12,14 @@ import (
 
 type jsonHandler struct {
 	Server         *Server
-	TemplateName   string
 	RequestDecoder handlers.RequestDecoder
 	Handler        handlers.RequestHandler
 }
 
 // JSONFunc creates a HTTP handler that outputs JSON
-func (s *Server) JSONFunc(handler handlers.RequestHandler, decoder handlers.RequestDecoder, templateName string) http.Handler {
+func (s *Server) JSONFunc(handler handlers.RequestHandler, decoder handlers.RequestDecoder) http.Handler {
 	return jsonHandler{
 		Server:         s,
-		TemplateName:   templateName,
 		RequestDecoder: decoder,
 		Handler:        handler,
 	}

@@ -1,0 +1,53 @@
+
+@import "../mixins/config";
+@import "../mixins/responsive";
+@import "../mixins/colour-macro";
+
+.peer-status {
+	display: flex;
+	flex-wrap: wrap;
+
+	$peer-size: 5rem;
+
+	.-peer {
+		width: $peer-size;
+		text-align: center;
+		margin: 0.25rem;
+
+		position: relative;
+
+		svg {
+			display: block;
+			width: $peer-size;
+			height: $peer-size;
+			margin: 0 auto;
+		}
+
+		.-name {
+			display: none;
+
+			position: absolute;
+			width: $peer-size;
+			height: 1.25rem;
+
+			background-color: rgba(20,20,20,0.3);
+			color: white;
+			font-size: 1rem;
+			line-height: 1.25rem;
+
+			left: 0;
+			top: 0.5 * $peer-size;
+		}
+		&:hover {
+			.-name {
+				display: block;
+			}
+		}
+
+		&.-voted {
+			border-width: 0.1875rem;
+			border-style: solid;
+			@include border-colour( ui-active );
+		}
+	}
+}

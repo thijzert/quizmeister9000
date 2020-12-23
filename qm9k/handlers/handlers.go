@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"net/http"
+	"time"
 
 	"github.com/thijzert/speeldoos/lib/properrandom"
 )
@@ -42,13 +43,15 @@ func (u User) Empty() bool {
 // A QuizKey is a unique identifier for a video
 type QuizKey string
 
+// Empty tests whether or not a Quiz key is set
 func (q QuizKey) Empty() bool {
 	return string(q) == ""
 }
 
 type round struct {
-	Quizmaster UserID
-	Questions  []question
+	Quizmaster      UserID
+	CurrentQuestion int
+	Questions       []question
 }
 
 type question struct {
@@ -57,10 +60,11 @@ type question struct {
 }
 
 type answer struct {
-	UserID UserID
-	Answer string
-	Scored bool
-	Score  int
+	UserID    UserID
+	Answer    string
+	Timestamp time.Time
+	Scored    bool
+	Score     int
 }
 
 // A Quiz wraps the state of one quiz
@@ -71,6 +75,7 @@ type Quiz struct {
 	Finished     bool
 	CurrentRound int
 	Contestants  []User
+	Votes        []UserID `json:",omitempty"`
 	Rounds       []round
 }
 

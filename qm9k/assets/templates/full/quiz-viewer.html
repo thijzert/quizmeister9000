@@ -1,8 +1,12 @@
 {{define `contents`}}
 
-<main class="quiz-viewer -dialog -medium">
+<main class="quiz-viewer -dialog -medium" data-quizkey={{.Response.Quiz.QuizKey}}>
 
-	<section>
+	<section class="dialog -medium peer-status -js-update-peer-status">
+		<template class="-js-template-peer">
+			<svg><use fill="#a2a2a2" xlink:href="#avatar-neutral"/></svg>
+			<div class="-name -hide-mobile"></div>
+		</template>
 	</section>
 
 </main>
