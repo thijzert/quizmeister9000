@@ -1,0 +1,9 @@
+@import "../mixins/config";
+@import "../mixins/responsive";
+@import "../mixins/colour-macro";
+
+main.join-quiz {
+	section, fieldset, input {
+		text-align: center;
+	}
+}

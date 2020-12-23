@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"crypto/rand"
 	"net/http"
 
 	"github.com/thijzert/speeldoos/lib/properrandom"
@@ -43,47 +42,8 @@ func (u User) Empty() bool {
 // A QuizKey is a unique identifier for a video
 type QuizKey string
 
-// NewQuizKey creates a new random QuizKey, with at least 56 bits of entropy.
-// QuizKeys should have no ambiguous characters, and shouldn't start or end in a '.'.
-func NewQuizKey() QuizKey {
-	m := 11
-	alphabet := []byte("abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXY01234567890-_.")
-	max := len(alphabet) * (256 / len(alphabet))
-
-	buf := make([]byte, m*2)
-	_, err := rand.Read(buf)
-	if err != nil {
-		panic(err)
-	}
-
-	rv := make([]byte, 0, m)
-	for _, c := range buf {
-		cc := int(c)
-		if cc >= max {
-			continue
-		}
-		b := alphabet[cc%len(alphabet)]
-		if b == '.' {
-			if len(rv) == 0 || len(rv) == m-1 {
-				continue
-			}
-		}
-		rv = append(rv, b)
-		if len(rv) == m {
-			return QuizKey(string(rv))
-		}
-	}
-
-	// Try again
-	return NewQuizKey()
-}
-
 func (q QuizKey) Empty() bool {
 	return string(q) == ""
-}
-
-func NewAccessCode() string {
-	return string(NewQuizKey())[0:7]
 }
 
 type round struct {

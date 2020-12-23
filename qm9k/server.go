@@ -62,6 +62,7 @@ func NewServer(c Config) (*Server, error) {
 
 	s.mux.Handle("/profile", s.HTMLFunc(handlers.ProfileHandler, handlers.ProfileDecoder, "full/profile"))
 	s.mux.Handle("/new-quiz", s.HTMLFunc(handlers.NewQuizHandler, handlers.NewQuizDecoder, "full/new-quiz"))
+	s.mux.Handle("/join-quiz", s.HTMLFunc(handlers.JoinHandler, handlers.JoinDecoder, "full/join-quiz"))
 	s.mux.Handle("/quiz/", s.HTMLFunc(handlers.QuizViewerHandler, handlers.QuizViewerDecoder, "full/quiz-viewer"))
 	s.mux.HandleFunc("/assets/", s.serveStaticAsset)
 	// s.mux.HandleFunc("/", s.homeHandler)
@@ -93,15 +94,24 @@ func (s *Server) getState(r *http.Request) handlers.State {
 		rv.User, _ = s.getUser(ses.UserID)
 	}
 
-	spp := strings.Split(r.URL.Path, "/")
-	if len(spp) > 2 && len(spp[2]) > 5 {
-		// TODO: figure out a less hacky way of doing this
-		if spp[1] == "quiz" || spp[1] == "quiz-status" || spp[1] == "quiz-log" {
-			quiz, ok := s.getQuiz(handlers.QuizKey(spp[2]))
-			if ok {
-				rv.Quiz = quiz
+	var quiz handlers.Quiz
+	var ok bool = false
+
+	if r.PostFormValue("quiz-join-code") != "" {
+		// A code was posted; add the corresponding quiz to the context state
+		quiz, ok = s.getQuizByAccessKey(r.PostFormValue("quiz-join-code"))
+	} else {
+		spp := strings.Split(r.URL.Path, "/")
+		if len(spp) > 2 && len(spp[2]) > 5 {
+			// TODO: figure out a less hacky way of doing this
+			if spp[1] == "quiz" || spp[1] == "quiz-status" || spp[1] == "quiz-log" {
+				quiz, ok = s.getQuiz(handlers.QuizKey(spp[2]))
 			}
 		}
+	}
+
+	if ok {
+		rv.Quiz = quiz
 	}
 
 	return rv

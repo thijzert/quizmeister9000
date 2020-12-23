@@ -1,6 +1,11 @@
 {{define `contents`}}
 
-<main class="home -dialog -small">
+<main class="join-quiz -dialog -small">
+	{{if .Response.Error}}
+
+	<section class="dialog -error">{{.Response.Error}}</section>
+
+	{{end}}
 
 	<section>
 		<div>
@@ -10,7 +15,7 @@
 				<fieldset>
 					<div class="ipt -text">
 						<label for="quiz-join-code">Enter your join code</label>
-						<div><input type="text" name="quiz-join-code" value="" /></div>
+						<div><input type="text" name="quiz-join-code" value="" placeholder="{{.Response.Placeholder}}" /></div>
 					</div>
 				</fieldset>
 				<fieldset>
@@ -23,15 +28,7 @@
 		</div>
 	</section>
 
-	{{if .CurrentUser.Admin}}
-		<section>
-			<h3>Start a new quiz</h3>
-			<div>
-				<a href="/new-quiz" class="tfbutton -alt -fullwidth -h50">Start a new quiz</a>
-			</div>
-		</section>
-	{{end}}
-
 </main>
 
 {{end}}
+

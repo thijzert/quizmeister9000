@@ -29,6 +29,13 @@ func (s *Server) initialiseQuizStore() error {
 		return err
 	}
 
+	s.quizByAccesskey = make(map[string]handlers.QuizKey)
+	for qkey, quiz := range s.quizStore {
+		if !quiz.Started && quiz.AccessCode != "" {
+			s.quizByAccesskey[quiz.AccessCode] = qkey
+		}
+	}
+
 	return nil
 }
 
@@ -43,6 +50,14 @@ func (s *Server) getQuiz(id handlers.QuizKey) (handlers.Quiz, bool) {
 	q, ok := s.quizStore[id]
 	q.QuizKey = id
 	return q, ok
+}
+
+func (s *Server) getQuizByAccessKey(accessKey string) (handlers.Quiz, bool) {
+	s.quizLock.RLock()
+	id := s.quizByAccesskey[accessKey]
+	s.quizLock.RUnlock()
+
+	return s.getQuiz(id)
 }
 
 func (s *Server) saveQuiz(q handlers.Quiz) {
@@ -62,6 +77,14 @@ func (s *Server) saveQuiz(q handlers.Quiz) {
 
 	log.Printf("saving quiz %s", q.QuizKey)
 	s.quizStore[q.QuizKey] = q
+
+	if q.AccessCode != "" {
+		if q.Started {
+			delete(s.quizByAccesskey, q.AccessCode)
+		} else {
+			s.quizByAccesskey[q.AccessCode] = q.QuizKey
+		}
+	}
 
 	// TODO: swap out for proper database
 	f, err := os.Create(path.Join(s.config.BDFATFJF, "quiz-store.json"))
