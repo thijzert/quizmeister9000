@@ -10,6 +10,16 @@ main.quiz-viewer {
 		text-align: center;
 	}
 
+	.-quiz-title {
+		margin: 0 0 1.5rem 0;
+		font-size: 1.75rem;
+		font-weight: 400;
+
+		strong {
+			font-weight: 600;
+		}
+	}
+
 	.question-container {
 		.question, .answer {
 			margin-bottom: 2rem;

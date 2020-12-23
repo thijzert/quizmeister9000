@@ -11,6 +11,38 @@ func (s State) votingEnabled() bool {
 		return true
 	}
 
+	// If we're in the middle of a round, voting is enabled if you've answered
+	// all questions (if you're a question-taker), or if all questions have been
+	// entered (if you're the quiz master)
+	if s.Quiz.Started && !s.Quiz.Finished {
+		if s.Quiz.CurrentRound < len(s.Quiz.Rounds) {
+			thisRound := s.Quiz.Rounds[s.Quiz.CurrentRound]
+
+			if thisRound.Quizmaster == s.User.UserID {
+				for _, q := range thisRound.Questions {
+					if q.Question == "" {
+						return false
+					}
+				}
+			} else {
+				for _, q := range thisRound.Questions {
+					found := false
+					for _, ans := range q.Answers {
+						if ans.UserID == s.User.UserID {
+							if ans.Answer == "" {
+								return false
+							}
+							found = true
+						}
+					}
+					if !found {
+						return false
+					}
+				}
+			}
+		}
+	}
+
 	return true
 }
 

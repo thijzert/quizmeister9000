@@ -67,6 +67,9 @@ export const single   = (c) => document.querySelector(c);
 // Null-safe version of single()
 export const mustSingle = (c) => document.querySelector(c) || document.createElement("TEMPLATE");
 
+export const singleRef     = (n,c) => n.querySelector(c);
+export const mustSingleRef = (n,c) => n.querySelector(c) || document.createElement("TEMPLATE");
+
 // Toggle visibility of an element
 export const toggleIf = ( elt, visible ) => {
 	if ( !elt ) {

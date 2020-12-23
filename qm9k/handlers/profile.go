@@ -73,8 +73,12 @@ func ProfileHandler(s State, r Request) (State, Response, error) {
 		rv.Changed = true
 	}
 
-	if rv.Changed && req.New {
-		return s, rv, errRedirect{""}
+	if rv.Changed {
+		if req.New {
+			return s, rv, errRedirect{""}
+		}
+
+		return s, rv, errRedirect{"profile"}
 	}
 
 	rv.CurrentProfile = s.User
