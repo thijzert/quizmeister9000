@@ -16,6 +16,12 @@
 
 		position: relative;
 
+		border-width: 0.1875rem;
+		border-style: none;
+		border-radius: 0.5rem;
+		border-color: transparent;
+		box-sizing: border-box;
+
 		svg {
 			display: block;
 			width: $peer-size;
@@ -46,7 +52,6 @@
 		}
 
 		&.-voted {
-			border-width: 0.1875rem;
 			border-style: solid;
 			@include border-colour( ui-active );
 		}

@@ -67,6 +67,7 @@ func NewServer(c Config) (*Server, error) {
 	s.mux.Handle("/quiz/", s.HTMLFunc(handlers.QuizViewerHandler, handlers.QuizViewerDecoder, "full/quiz-viewer"))
 
 	s.mux.Handle("/peer-status/", s.JSONFunc(handlers.PeerStatusHandler, handlers.PeerStatusDecoder))
+	s.mux.Handle("/vote-continue/", s.JSONFunc(handlers.VoteHandler, handlers.VoteDecoder))
 
 	s.mux.HandleFunc("/assets/", s.serveStaticAsset)
 	// s.mux.HandleFunc("/", s.homeHandler)
@@ -108,9 +109,7 @@ func (s *Server) getState(r *http.Request) handlers.State {
 		spp := strings.Split(r.URL.Path, "/")
 		if len(spp) > 2 && len(spp[2]) > 5 {
 			// TODO: figure out a less hacky way of doing this
-			if spp[1] == "quiz" || spp[1] == "quiz-status" || spp[1] == "peer-status" || spp[1] == "quiz-log" {
-				quiz, ok = s.getQuiz(handlers.QuizKey(spp[2]))
-			}
+			quiz, ok = s.getQuiz(handlers.QuizKey(spp[2]))
 		}
 	}
 

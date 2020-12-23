@@ -97,6 +97,15 @@ func (q Quiz) Equals(b Quiz) bool {
 		}
 	}
 
+	if (q.Votes == nil && b.Votes != nil) || (q.Votes != nil && b.Votes == nil) || len(q.Votes) != len(b.Votes) {
+		return false
+	}
+	for i, quid := range q.Votes {
+		if quid != b.Votes[i] {
+			return false
+		}
+	}
+
 	if (q.Rounds == nil && b.Rounds != nil) || (q.Rounds != nil && b.Rounds == nil) || len(q.Rounds) != len(b.Rounds) {
 		return false
 	}

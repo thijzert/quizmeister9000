@@ -37,6 +37,8 @@ async function refreshPeerStatus() {
 				use.setAttribute("xlink:href","#avatar-"+peer.Status);
 				use.setAttribute("fill","#"+peer.Colour);
 			}
+			peerElt.style.borderColor = "#"+peer.Colour;
+			peerElt.classList.toggle("-voted", peer.Voted)
 			let nameElt = peerElt.querySelector(".-name");
 			if ( nameElt ) {
 				nameElt.textContent = peer.Nick;

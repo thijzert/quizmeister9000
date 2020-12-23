@@ -479,4 +479,15 @@ $border-width: thin;
 		opacity: .2;
 		transition: 0s;
 	}
+
+
+
+
+
+	&.-vote-continue {
+		&, &.-check {
+			text-align: center;
+			padding-left: 0;
+		}
+	}
 }
