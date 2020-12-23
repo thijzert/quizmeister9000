@@ -30,6 +30,20 @@ type voteResponse struct {
 
 func (voteResponse) FlaggedAsResponse() {}
 
+func (s State) hasVoted(u UserID) bool {
+	if s.Quiz.Votes == nil {
+		return false
+	}
+
+	for _, uid := range s.Quiz.Votes {
+		if uid == u {
+			return true
+		}
+	}
+
+	return false
+}
+
 // VoteHandler handles requests for the vote page
 func VoteHandler(s State, r Request) (State, Response, error) {
 	var rv voteResponse
@@ -63,12 +77,8 @@ func VoteHandler(s State, r Request) (State, Response, error) {
 		}
 	}
 
-	if s.Quiz.Votes != nil {
-		for _, uid := range s.Quiz.Votes {
-			if uid == s.User.UserID {
-				rv.MyVote = 1
-			}
-		}
+	if s.hasVoted(s.User.UserID) {
+		rv.MyVote = 1
 	}
 
 	return s, rv, nil

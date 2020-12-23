@@ -65,6 +65,7 @@ func PeerStatusHandler(s State, r Request) (State, Response, error) {
 			Colour: peer.Colour,
 			Quest:  peer.Quest,
 			Status: "neutral",
+			Voted:  s.hasVoted(peer.UserID),
 		}
 
 		if answers != nil {
@@ -78,14 +79,6 @@ func PeerStatusHandler(s State, r Request) (State, Response, error) {
 					pst.Status = "done"
 				} else if someoneHasTyped {
 					pst.Status = "thinking"
-				}
-			}
-		}
-
-		if s.Quiz.Votes != nil {
-			for _, uid := range s.Quiz.Votes {
-				if pst.UserID == uid {
-					pst.Voted = true
 				}
 			}
 		}
