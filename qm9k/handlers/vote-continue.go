@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"log"
 	"net/http"
 	"strconv"
 )
@@ -25,28 +26,17 @@ func VoteDecoder(r *http.Request) (Request, error) {
 }
 
 type voteResponse struct {
-	MyVote int
+	MyVote        int
+	VotingEnabled bool
 }
 
 func (voteResponse) FlaggedAsResponse() {}
 
-func (s State) hasVoted(u UserID) bool {
-	if s.Quiz.Votes == nil {
-		return false
-	}
-
-	for _, uid := range s.Quiz.Votes {
-		if uid == u {
-			return true
-		}
-	}
-
-	return false
-}
-
 // VoteHandler handles requests for the vote page
 func VoteHandler(s State, r Request) (State, Response, error) {
-	var rv voteResponse
+	rv := voteResponse{
+		VotingEnabled: s.votingEnabled(),
+	}
 	req, ok := r.(voteRequest)
 	if !ok {
 		return s, rv, errWrongRequestType{}
@@ -56,7 +46,7 @@ func VoteHandler(s State, r Request) (State, Response, error) {
 		return s, rv, err
 	}
 
-	if req.Voted {
+	if req.Voted && rv.VotingEnabled {
 		idx := -1
 		if s.Quiz.Votes != nil {
 			for i, uid := range s.Quiz.Votes {
@@ -79,6 +69,23 @@ func VoteHandler(s State, r Request) (State, Response, error) {
 
 	if s.hasVoted(s.User.UserID) {
 		rv.MyVote = 1
+	}
+
+	// Sneaky hack: since it's nice to have button feedback, calculate global
+	// changes to the quiz structure after setting the output
+
+	if s.everyoneHasVoted() {
+		// Advance the main game loop
+
+		if !s.Quiz.Started {
+			s.Quiz.Started = true
+			s.Quiz.CurrentRound = -1
+		}
+
+		log.Printf("everyone has voted in quiz '%s'", s.Quiz.QuizKey)
+		s.Quiz = advanceQuiz(s.Quiz)
+
+		s.Quiz.Votes = s.Quiz.Votes[:0]
 	}
 
 	return s, rv, nil

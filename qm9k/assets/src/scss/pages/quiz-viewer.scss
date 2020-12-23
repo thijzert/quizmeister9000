@@ -6,6 +6,10 @@
 
 main.quiz-viewer {
 
+	.-join-code {
+		text-align: center;
+	}
+
 	.question-container {
 		.question, .answer {
 			margin-bottom: 2rem;

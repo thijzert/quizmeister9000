@@ -374,8 +374,8 @@ github.com/thijzert/go-rcfile v0.0.0-20161124154356-8a438d6f08d5/go.mod h1:rHbK3
 github.com/thijzert/go-resemble v1.4.0 h1:mFsyXCYC1dHDheRK8/xXp1EejfpKScND2KaTMx5vMG0=
 github.com/thijzert/go-resemble v1.4.0/go.mod h1:b72WQ3aLiYKuxNYRWsP0wQ6twcWWfSjhzOtVygMkyhY=
 github.com/thijzert/go-termcolours v0.0.0-20171031170714-d434be3e67cd/go.mod h1:Ci2LSImd2pSsd8mLxzsaUh4M7M2hlPlPXAzPDjaDg7s=
-github.com/thijzert/speeldoos v0.4.1 h1:I6u5jbYr8Ia1yiWYqnqpHKaR+Pgoj0LzCxoMySxGcYY=
-github.com/thijzert/speeldoos v0.4.1/go.mod h1:sCI+Zwy53CWEcC5RuHhP/ZIesnF5bAKRnrHxV7yHoaQ=
+github.com/thijzert/speeldoos v0.4.2 h1:vQ362J5EpjSMUOWltl5RScpLkbW/8wT4dkSU4Wx/bT4=
+github.com/thijzert/speeldoos v0.4.2/go.mod h1:sCI+Zwy53CWEcC5RuHhP/ZIesnF5bAKRnrHxV7yHoaQ=
 github.com/tinylib/msgp v1.0.2/go.mod h1:+d+yLhGm8mzTaHzB+wgMYrodPfmZrzkirds8fDWklFE=
 github.com/tinylib/msgp v1.1.0/go.mod h1:+d+yLhGm8mzTaHzB+wgMYrodPfmZrzkirds8fDWklFE=
 github.com/tinylib/msgp v1.1.1/go.mod h1:+d+yLhGm8mzTaHzB+wgMYrodPfmZrzkirds8fDWklFE=
