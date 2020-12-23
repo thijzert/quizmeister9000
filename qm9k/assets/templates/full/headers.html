@@ -24,7 +24,7 @@
 			<section class="-brand"><a href="{{.AppRoot}}"><span class="-only-mobile">Q</span> <span class="-hide-mobile">Quizmeister9000</span></a></section>
 			<section class="-login">
 				{{if and .Session .CurrentUser.Nick}}
-					<a href="{{.AppRoot}}profile">Hello, <strong>{{.CurrentUser.Nick}}!</strong>
+					<a href="{{.AppRoot}}profile">Hello, <strong>{{.CurrentUser.Nick}}</strong>!
 					{{if .CurrentUser.Colour}}
 						<svg class="-avatar"><use fill="#{{.CurrentUser.Colour}}" xlink:href="#avatar-neutral"/></svg>
 					{{end}}

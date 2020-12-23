@@ -78,6 +78,31 @@ func NewQuizKey() QuizKey {
 	return NewQuizKey()
 }
 
+func (q QuizKey) Empty() bool {
+	return string(q) == ""
+}
+
+func NewAccessCode() string {
+	return string(NewQuizKey())[0:7]
+}
+
+type round struct {
+	Quizmaster UserID
+	Questions  []question
+}
+
+type question struct {
+	Question string
+	Answers  []answer
+}
+
+type answer struct {
+	UserID UserID
+	Answer string
+	Scored bool
+	Score  int
+}
+
 // A Quiz wraps the state of one quiz
 type Quiz struct {
 	QuizKey      QuizKey
@@ -86,18 +111,7 @@ type Quiz struct {
 	Finished     bool
 	CurrentRound int
 	Contestants  []User
-	Rounds       []struct {
-		Quizmaster UserID
-		Questions  []struct {
-			Question string
-			Answers  []struct {
-				UserID UserID
-				Answer string
-				Scored bool
-				Score  int
-			}
-		}
-	}
+	Rounds       []round
 }
 
 // Equals tests if two quizzes are the same
@@ -118,7 +132,7 @@ func (q Quiz) Equals(b Quiz) bool {
 		}
 	}
 
-	if q.Rounds == nil || b.Rounds == nil || len(q.Rounds) != len(b.Rounds) {
+	if (q.Rounds == nil && b.Rounds != nil) || (q.Rounds != nil && b.Rounds == nil) || len(q.Rounds) != len(b.Rounds) {
 		return false
 	}
 	for i, round := range q.Rounds {
@@ -127,7 +141,7 @@ func (q Quiz) Equals(b Quiz) bool {
 			return false
 		}
 
-		if round.Questions == nil || bround.Questions == nil || len(round.Questions) != len(bround.Questions) {
+		if (round.Questions == nil && bround.Questions != nil) || (round.Questions != nil && bround.Questions == nil) || len(round.Questions) != len(bround.Questions) {
 			return false
 		}
 
@@ -137,7 +151,7 @@ func (q Quiz) Equals(b Quiz) bool {
 			if qq.Question != bq.Question {
 				return false
 			}
-			if qq.Answers == nil || bq.Answers == nil || len(qq.Answers) != len(bq.Answers) {
+			if (qq.Answers == nil && bq.Answers != nil) || (qq.Answers != nil && bq.Answers == nil) || len(qq.Answers) != len(bq.Answers) {
 				return false
 			}
 

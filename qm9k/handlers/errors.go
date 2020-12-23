@@ -1,6 +1,11 @@
 package handlers
 
-import "fmt"
+import (
+	"errors"
+	"fmt"
+
+	"github.com/thijzert/quizmeister9000/qm9k/weberrors"
+)
 
 type errWrongRequestType struct{}
 
@@ -34,4 +39,34 @@ func (errRedirect) HTTPCode() int {
 
 func (e errRedirect) RedirectLocation() string {
 	return e.URL
+}
+
+func errForbidden(headline, message string) error {
+	rv := errors.New("access denied")
+	rv = weberrors.WithStatus(rv, 403)
+
+	if headline == "" {
+		headline = "Access Denied"
+	}
+	if message == "" {
+		message = "You don't have permission to access this resource"
+	}
+
+	rv = weberrors.WithMessage(rv, headline, message)
+	return rv
+}
+
+func errNotFound(headline, message string) error {
+	rv := errors.New("not found")
+	rv = weberrors.WithStatus(rv, 404)
+
+	if headline == "" {
+		headline = "Not Found"
+	}
+	if message == "" {
+		message = "The document or resource you requested could not be found"
+	}
+
+	rv = weberrors.WithMessage(rv, headline, message)
+	return rv
 }

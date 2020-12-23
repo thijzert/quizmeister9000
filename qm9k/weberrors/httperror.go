@@ -1,6 +1,8 @@
 package weberrors
 
-import "errors"
+import (
+	"errors"
+)
 
 type HTTPError interface {
 	error
@@ -12,7 +14,7 @@ type httpError struct {
 	Cause      error
 }
 
-func errorWithStatus(e error, c int) error {
+func WithStatus(e error, c int) error {
 	if e == nil {
 		return nil
 	}
