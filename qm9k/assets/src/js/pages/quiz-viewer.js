@@ -1,9 +1,12 @@
-import { mustSingle, mustSingleRef, toggleIf } from "../lib/helpers.js";
+import { closest, mustSingle, mustSingleRef, toggleIf } from "../lib/helpers.js";
 import { getJSON } from "../lib/post.js";
 import { enableVoting } from "../components/vote-continue.js";
 
 export function quizMain() {
-	setTimeout( updateQuizStatus, 200 );
+	let qcont = mustSingle(".-js-quiz-questions .question-container")
+
+	setInterval( updateQuizStatus, 1200 );
+	updateQuizStatus();
 }
 
 let currentRound = -2;
@@ -40,6 +43,10 @@ async function updateQuizStatus() {
 					mustSingleRef(ndq, "-question").innerText = q.Question;
 					mustSingleRef(ndq, "textarea").value = q.MyAnswer;
 				}
+
+				let txt = mustSingleRef(ndq, "textarea");
+				txt.addEventListener("focus",questionFocus);
+				txt.addEventListener("blur",questionBlur);
 
 				qcont.appendChild(ndq);
 				mustSingleRef(ndq, ".-number").innerText = qcont.children.length;
@@ -85,4 +92,17 @@ async function updateQuizStatus() {
 	toggleIf( mustSingle(".-js-quiz-global-end"), status.QuizStatus.Finished )
 
 
+}
+
+function questionFocus(e) {
+	let nd = closest( e.target, ".question,.answer" );
+	if ( nd ) {
+		nd.classList.toggle("-focus", true);
+	}
+}
+function questionBlur(e) {
+	let nd = closest( e.target, ".question,.answer" );
+	if ( nd ) {
+		nd.classList.toggle("-focus", false);
+	}
 }

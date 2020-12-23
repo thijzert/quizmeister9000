@@ -50,6 +50,12 @@ main.quiz-viewer {
 				}
 			}
 
+			&.-focus {
+				.-header .peer-status {
+					display: flex;
+				}
+			}
+
 			.ipt.-textarea {
 				textarea {
 					height: 4.75rem;
