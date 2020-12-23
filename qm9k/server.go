@@ -115,6 +115,13 @@ func (s *Server) getState(r *http.Request) handlers.State {
 
 	if ok {
 		rv.Quiz = quiz
+
+		for i, u := range rv.Quiz.Contestants {
+			uu, uok := s.getUser(u.UserID)
+			if uok {
+				rv.Quiz.Contestants[i] = uu
+			}
+		}
 	}
 
 	return rv
