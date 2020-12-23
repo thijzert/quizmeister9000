@@ -3,6 +3,7 @@ package qm9k
 import (
 	"html/template"
 	"net/http"
+	"strings"
 	"sync"
 
 	"github.com/thijzert/quizmeister9000/qm9k/handlers"
@@ -12,6 +13,9 @@ import (
 type Config struct {
 	// Base Directory For All The JSON Files
 	BDFATFJF string
+
+	// Set the 'secure' flag on all cookies (if the reverse proxy is unable to do so)
+	SecureCookies bool
 }
 
 // A Server represents a HTTP handler that results in the quizmeister9000 interface
@@ -23,6 +27,10 @@ type Server struct {
 
 	userLock  sync.RWMutex
 	userStore map[handlers.UserID]handlers.User
+
+	quizLock        sync.RWMutex
+	quizByAccesskey map[string]handlers.QuizKey
+	quizStore       map[handlers.QuizKey]handlers.Quiz
 
 	// handle HTTP stuff
 	mux *http.ServeMux
@@ -60,6 +68,16 @@ func NewServer(c Config) (*Server, error) {
 	return s, nil
 }
 
+// appRoot finds the relative path to the application root
+func (*Server) appRoot(r *http.Request) string {
+	// Find the relative path for the application root by counting the number of slashes in the relative URL
+	c := strings.Count(r.URL.Path, "/") - 1
+	if c == 0 {
+		return "./"
+	}
+	return strings.Repeat("../", c)
+}
+
 func (s *Server) getState(r *http.Request) handlers.State {
 	var rv handlers.State
 
@@ -73,7 +91,7 @@ func (s *Server) getState(r *http.Request) handlers.State {
 
 // setState writes back any modified fields to the global state
 func (s *Server) setState(st handlers.State) error {
-	if st.User.UserID != 0 {
+	if !st.User.UserID.Empty() {
 		s.saveUser(st.User)
 	}
 	return nil

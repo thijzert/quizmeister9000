@@ -33,6 +33,7 @@
 				<fieldset>
 					<div>
 						<input type="hidden" name="save" value="1" />
+						{{if .Response.New}}<input type="hidden" name="new" value="1" />{{end}}
 						<input class="tfbutton -h50 -fullwidth" type="submit" value="Save" />
 						<a href="{{.AppRoot}}" class="tfbutton -transparent -h50 -fullwidth">Back</a>
 					</div>

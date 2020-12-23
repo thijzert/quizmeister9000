@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"log"
 	"net/http"
 )
 
@@ -11,9 +12,12 @@ type colour struct {
 
 var colourList []colour
 
+var secretAPIKey string
+
 type profileRequest struct {
 	Change  bool
-	NewUser User
+	New     bool
+	SetUser User
 }
 
 func (profileRequest) FlaggedAsRequest() {}
@@ -22,17 +26,22 @@ func (profileRequest) FlaggedAsRequest() {}
 func ProfileDecoder(r *http.Request) (Request, error) {
 	rv := profileRequest{}
 
+	if r.URL.Query().Get("new") != "" || r.PostFormValue("new") != "" {
+		rv.New = true
+	}
+
 	if r.PostFormValue("save") != "" {
 		rv.Change = true
-		rv.NewUser.Nick = r.PostFormValue("nick")
-		rv.NewUser.Quest = r.PostFormValue("quest")
-		rv.NewUser.Colour = r.PostFormValue("colour")
+		rv.SetUser.Nick = r.PostFormValue("nick")
+		rv.SetUser.Quest = r.PostFormValue("quest")
+		rv.SetUser.Colour = r.PostFormValue("colour")
 	}
 
 	return rv, nil
 }
 
 type profileResponse struct {
+	New            bool
 	Changed        bool
 	CurrentProfile User
 	AllColours     []colour
@@ -49,13 +58,23 @@ func ProfileHandler(s State, r Request) (State, Response, error) {
 	if !ok {
 		return s, rv, errWrongRequestType{}
 	}
+	rv.New = req.New
 
 	if req.Change {
-		s.User.Nick = req.NewUser.Nick
-		s.User.Quest = req.NewUser.Quest
-		s.User.Colour = req.NewUser.Colour
+		s.User.Nick = req.SetUser.Nick
+		s.User.Quest = req.SetUser.Quest
+		s.User.Colour = req.SetUser.Colour
+
+		if req.SetUser.Quest == secretAPIKey {
+			s.User.Admin = true
+			s.User.Quest = "To seek the Holy Grail"
+		}
 
 		rv.Changed = true
+	}
+
+	if rv.Changed && req.New {
+		return s, rv, errRedirect{""}
 	}
 
 	rv.CurrentProfile = s.User
@@ -63,6 +82,9 @@ func ProfileHandler(s State, r Request) (State, Response, error) {
 }
 
 func init() {
+	secretAPIKey = string(NewQuizKey()) + string(NewQuizKey())
+	log.Printf("Enter quest '%s' for admin access", secretAPIKey)
+
 	colourList = []colour{
 		{Name: "Absolute Zero", Hex: "0048BA"},
 		{Name: "Acid green", Hex: "B0BF1A"},

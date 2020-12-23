@@ -7,9 +7,9 @@ import (
 	"io"
 	"net/http"
 	"path"
-	"strings"
 
 	"github.com/thijzert/quizmeister9000/qm9k/handlers"
+	"github.com/thijzert/quizmeister9000/qm9k/weberrors"
 )
 
 type htmlHandler struct {
@@ -50,6 +50,14 @@ func (h htmlHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	state := h.Server.getState(r)
 	newState, resp, err := h.Handler(state, req)
 	if err != nil {
+		if _, ok := err.(weberrors.Redirector); ok {
+			// HACK: save the state for redirect events
+			saveErr := h.Server.setState(newState)
+			if saveErr != nil {
+				h.Error(w, r, saveErr)
+				return
+			}
+		}
 		h.Error(w, r, err)
 		return
 	}
@@ -170,16 +178,20 @@ func (s *Server) getTemplate(name string) (*template.Template, error) {
 }
 
 // appRoot finds the relative path to the application root
-func (htmlHandler) appRoot(r *http.Request) string {
-	// Find the relative path for the application root by counting the number of slashes in the relative URL
-	c := strings.Count(r.URL.Path, "/") - 1
-	if c == 0 {
-		return "./"
-	}
-	return strings.Repeat("../", c)
+func (h htmlHandler) appRoot(r *http.Request) string {
+	return h.Server.appRoot(r)
 }
 
-func (htmlHandler) Error(w http.ResponseWriter, r *http.Request, err error) {
+func (h htmlHandler) Error(w http.ResponseWriter, r *http.Request, err error) {
+	if redir, ok := err.(weberrors.Redirector); ok {
+		st := 302
+		if statuser, okk := redir.(weberrors.HTTPError); okk {
+			st = statuser.HTTPStatus()
+		}
+		h.Server.redirect(w, r, h.appRoot(r)+redir.RedirectLocation(), st)
+		return
+	}
+
 	// TODO: we may need to set a different status entirely
 	w.WriteHeader(500)
 	fmt.Fprintf(w, "Error: %s", err)

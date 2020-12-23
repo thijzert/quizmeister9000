@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"crypto/rand"
 	"net/http"
 
 	"github.com/thijzert/speeldoos/lib/properrandom"
@@ -12,12 +13,15 @@ type State struct {
 	Quiz Quiz
 }
 
+// A UserID kind-of-uniquely identifies a user
 type UserID uint64
 
+// Empty tests whether or not a UserID is set
 func (u UserID) Empty() bool {
 	return u == 0
 }
 
+// NewUserID generates a new user ID
 func NewUserID() UserID {
 	return UserID(properrandom.Uint64())
 }
@@ -26,12 +30,58 @@ func NewUserID() UserID {
 type User struct {
 	UserID UserID
 	Nick   string
-	Quest  string
-	Colour string
+	Quest  string `json:",omitempty"`
+	Colour string `json:",omitempty"`
+	Admin  bool   `json:",omitempty"`
+}
+
+// Empty tests whether or not a User has any fields set
+func (u User) Empty() bool {
+	return u.Nick == "" && u.Quest == ""
+}
+
+// A QuizKey is a unique identifier for a video
+type QuizKey string
+
+// NewQuizKey creates a new random QuizKey, with at least 56 bits of entropy.
+// QuizKeys should have no ambiguous characters, and shouldn't start or end in a '.'.
+func NewQuizKey() QuizKey {
+	m := 11
+	alphabet := []byte("abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXY01234567890-_.")
+	max := len(alphabet) * (256 / len(alphabet))
+
+	buf := make([]byte, m*2)
+	_, err := rand.Read(buf)
+	if err != nil {
+		panic(err)
+	}
+
+	rv := make([]byte, 0, m)
+	for _, c := range buf {
+		cc := int(c)
+		if cc >= max {
+			continue
+		}
+		b := alphabet[cc%len(alphabet)]
+		if b == '.' {
+			if len(rv) == 0 || len(rv) == m-1 {
+				continue
+			}
+		}
+		rv = append(rv, b)
+		if len(rv) == m {
+			return QuizKey(string(rv))
+		}
+	}
+
+	// Try again
+	return NewQuizKey()
 }
 
 // A Quiz wraps the state of one quiz
 type Quiz struct {
+	QuizKey      QuizKey
+	AccessCode   string
 	Started      bool
 	Finished     bool
 	CurrentRound int
@@ -48,6 +98,58 @@ type Quiz struct {
 			}
 		}
 	}
+}
+
+// Equals tests if two quizzes are the same
+func (q Quiz) Equals(b Quiz) bool {
+	if q.QuizKey != b.QuizKey || q.AccessCode != b.AccessCode {
+		return false
+	}
+	if q.Started != b.Started || q.Finished != b.Finished || q.CurrentRound != b.CurrentRound {
+		return false
+	}
+
+	if q.Contestants == nil || b.Contestants == nil || len(q.Contestants) != len(b.Contestants) {
+		return false
+	}
+	for i, u := range q.Contestants {
+		if u.UserID != b.Contestants[i].UserID {
+			return false
+		}
+	}
+
+	if q.Rounds == nil || b.Rounds == nil || len(q.Rounds) != len(b.Rounds) {
+		return false
+	}
+	for i, round := range q.Rounds {
+		bround := b.Rounds[i]
+		if round.Quizmaster != bround.Quizmaster {
+			return false
+		}
+
+		if round.Questions == nil || bround.Questions == nil || len(round.Questions) != len(bround.Questions) {
+			return false
+		}
+
+		for j, qq := range round.Questions {
+			bq := bround.Questions[j]
+
+			if qq.Question != bq.Question {
+				return false
+			}
+			if qq.Answers == nil || bq.Answers == nil || len(qq.Answers) != len(bq.Answers) {
+				return false
+			}
+
+			for k, qqa := range qq.Answers {
+				if qqa != bq.Answers[k] {
+					return false
+				}
+			}
+		}
+	}
+
+	return true
 }
 
 var (
@@ -79,13 +181,3 @@ type RequestDecoder func(*http.Request) (Request, error)
 // output is the new state of the world (which may or may not be the same), a
 // handler-specific response type, and/or an error.
 type RequestHandler func(State, Request) (State, Response, error)
-
-type errWrongRequestType struct{}
-
-func (errWrongRequestType) Error() string {
-	return "wrong request type"
-}
-
-func (errWrongRequestType) HTTPCode() int {
-	return 400
-}

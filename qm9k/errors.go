@@ -45,6 +45,15 @@ func (s *Server) Error(w http.ResponseWriter, r *http.Request, e error) {
 		return
 	}
 
+	if redir, ok := e.(weberrors.Redirector); ok {
+		st := 302
+		if statuser, okk := redir.(weberrors.HTTPError); okk {
+			st = statuser.HTTPStatus()
+		}
+		s.redirect(w, r, s.appRoot(r)+redir.RedirectLocation(), st)
+		return
+	}
+
 	httpstatus, cause := weberrors.HTTPStatusCode(e)
 
 	log.Print(e)

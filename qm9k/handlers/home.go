@@ -18,5 +18,8 @@ func (homeResponse) FlaggedAsResponse() {}
 
 // HomeHandler handles requests for the home page
 func HomeHandler(s State, _ Request) (State, Response, error) {
+	if s.User.Nick == "" {
+		return s, homeResponse{}, errRedirect{"profile?new=1"}
+	}
 	return s, homeResponse{}, nil
 }
