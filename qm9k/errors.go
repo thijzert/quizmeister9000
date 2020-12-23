@@ -55,6 +55,9 @@ func (s *Server) Error(w http.ResponseWriter, r *http.Request, e error) {
 	}
 
 	httpstatus, cause := weberrors.HTTPStatusCode(e)
+	if httpstatus == 0 {
+		httpstatus = 400
+	}
 
 	log.Print(e)
 	w.WriteHeader(httpstatus)

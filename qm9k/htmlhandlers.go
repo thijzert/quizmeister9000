@@ -183,16 +183,20 @@ func (h htmlHandler) appRoot(r *http.Request) string {
 }
 
 func (h htmlHandler) Error(w http.ResponseWriter, r *http.Request, err error) {
+	st, _ := weberrors.HTTPStatusCode(err)
+
 	if redir, ok := err.(weberrors.Redirector); ok {
-		st := 302
-		if statuser, okk := redir.(weberrors.HTTPError); okk {
-			st = statuser.HTTPStatus()
+		if st == 0 {
+			st = 302
 		}
 		h.Server.redirect(w, r, h.appRoot(r)+redir.RedirectLocation(), st)
 		return
 	}
 
-	// TODO: we may need to set a different status entirely
-	w.WriteHeader(500)
+	if st == 0 {
+		st = 500
+	}
+
+	w.WriteHeader(st)
 	fmt.Fprintf(w, "Error: %s", err)
 }

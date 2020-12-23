@@ -90,6 +90,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		Value:    string(session.ID),
 		Expires:  time.Now().Add(168 * time.Hour),
 		Secure:   s.config.SecureCookies,
+		SameSite: http.SameSiteStrictMode,
 		HttpOnly: true,
 	}
 	http.SetCookie(w, c)

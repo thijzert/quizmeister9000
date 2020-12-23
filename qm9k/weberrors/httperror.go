@@ -14,7 +14,7 @@ type httpError struct {
 	Cause      error
 }
 
-func WithStatus(e error, c int) error {
+func WithStatus(e error, c int) HTTPError {
 	if e == nil {
 		return nil
 	}
@@ -33,6 +33,10 @@ func (e httpError) Unwrap() error {
 	return e.Cause
 }
 
+func (e httpError) HTTPStatus() int {
+	return e.StatusCode
+}
+
 func HTTPStatusCode(e error) (statusCode int, cause error) {
 	if e == nil {
 		return 200, nil
@@ -48,5 +52,5 @@ func HTTPStatusCode(e error) (statusCode int, cause error) {
 		return herr.HTTPStatus(), herr
 	}
 
-	return 400, e
+	return 0, e
 }
