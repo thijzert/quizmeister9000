@@ -37,6 +37,10 @@ async function refreshPeerStatus() {
 				use.setAttribute("xlink:href","#avatar-"+peer.Status);
 				use.setAttribute("fill","#"+peer.Colour);
 			}
+			let nameElt = peerElt.querySelector(".-name");
+			if ( nameElt ) {
+				nameElt.textContent = peer.Nick;
+			}
 		})
 	})
 }
