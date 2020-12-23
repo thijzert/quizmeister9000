@@ -5,5 +5,44 @@
 @import "../components/peer-status";
 
 main.quiz-viewer {
+
+	.question-container {
+		.question, .answer {
+			margin-bottom: 2rem;
+			.-header {
+				display: flex;
+				flex-direction: row;
+				align-items: end;
+				margin-bottom: 0.5rem;
+
+				.-number {
+					font-size: 2.5rem;
+					line-height: 2.5rem;
+					min-width: 3rem;
+					max-width: 3rem;
+					text-align: right;
+					@include text-colour( light );
+
+					margin-right: 1.5rem;
+				}
+
+				.-question {
+					@include text-colour( light );
+					word-break: break-word;
+				}
+
+				.peer-status {
+					display: none;
+				}
+			}
+
+			.ipt.-textarea {
+				textarea {
+					height: 4.75rem;
+					resize: none;
+				}
+			}
+		}
+	}
 }
 

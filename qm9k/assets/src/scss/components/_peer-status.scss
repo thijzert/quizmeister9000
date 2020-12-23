@@ -7,10 +7,7 @@
 	display: flex;
 	flex-wrap: wrap;
 
-	$peer-size: 5rem;
-
 	.-peer {
-		width: $peer-size;
 		text-align: center;
 		margin: 0.25rem;
 
@@ -24,8 +21,6 @@
 
 		svg {
 			display: block;
-			width: $peer-size;
-			height: $peer-size;
 			margin: 0 auto;
 		}
 
@@ -33,17 +28,13 @@
 			display: none;
 
 			position: absolute;
-			width: $peer-size;
 			padding: 0.25rem 0.375rem;
 
 			background-color: rgba(20,20,20,0.3);
 			color: white;
-			font-size: .875rem;
-			line-height: 1rem;
 			word-break: break-word;
 
 			left: 0;
-			top: 0.375 * $peer-size;
 		}
 		&:hover {
 			.-name {
@@ -55,5 +46,29 @@
 			border-style: solid;
 			@include border-colour( ui-active );
 		}
+	}
+
+	@mixin set-peer-size( $peer-size ) {
+		.-peer {
+			width: $peer-size;
+
+			svg {
+				width: $peer-size;
+				height: $peer-size;
+			}
+
+			.-name {
+				width: $peer-size;
+				font-size: .175 * $peer-size;
+				line-height: .2 * $peer-size;
+				top: 0.375 * $peer-size;
+			}
+		}
+	}
+
+	@include set-peer-size( 5rem );
+
+	&.-small {
+		@include set-peer-size( 2rem );
 	}
 }

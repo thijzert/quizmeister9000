@@ -11,6 +11,10 @@ async function voteContinue(e) {
 		return;
 	}
 
+	if ( btn.disabled || btn.classList.contains("-disabled") ) {
+		return;
+	}
+
 	let quizkey = mustSingle("main").dataset["quizkey"];
 	let rv;
 
@@ -20,9 +24,21 @@ async function voteContinue(e) {
 		rv = await postJSON("/vote-continue/"+quizkey, {vote: 1})
 	}
 
-	let tog = !!rv.MyVote;
+	setVoteStatus(rv.MyVote);
+}
+
+export function setVoteStatus( myvote ) {
+	myvote = !!myvote;
 	all(".-js-vote-continue").forEach(e => {
-		e.classList.toggle("-voted", tog);
-		e.classList.toggle("-check", tog);
+		e.classList.toggle("-voted", myvote);
+		e.classList.toggle("-check", myvote);
+		e.classList.toggle("-alt", myvote);
+	})
+}
+
+export function enableVoting( enabled ) {
+	all(".-js-vote-continue").forEach(e => {
+		e.classList.toggle("-disabled", !enabled);
+		e.disabled = !enabled;
 	})
 }

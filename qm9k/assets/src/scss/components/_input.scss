@@ -2,6 +2,7 @@
 .ipt {
 	margin-bottom: 1.25rem;
 
+	textarea,
 	input[type=text],
 	input[type=password],
 	input[type=numeric],
@@ -15,6 +16,7 @@
 		line-height: 1.5rem;
 		padding: 0.75rem 1.25rem;
 
+		@include font-sans();
 		@include text-colour( ui-text );
 
 		&:focus, &:active {
@@ -33,6 +35,12 @@
 
 	&.-text {
 		input {
+			display: block;
+			width: 100%;
+		}
+	}
+	&.-textarea {
+		textarea {
 			display: block;
 			width: 100%;
 		}

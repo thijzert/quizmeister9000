@@ -2,7 +2,7 @@ import { all, single, mustSingle } from "../lib/helpers.js";
 import { getJSON } from "../lib/post.js";
 
 export function peerStatusMain() {
-	if ( single(".-js-update-peer-status") ) {
+	if ( single(".peer-status") ) {
 		setUpPeerStatus();
 	}
 }
@@ -15,12 +15,12 @@ async function refreshPeerStatus() {
 	let quizkey = mustSingle("main").dataset["quizkey"];
 	let peerStatus = await getJSON("/peer-status/"+quizkey)
 
-	all(".-js-update-peer-status").forEach(elt => {
+	all(".peer-status").forEach(elt => {
 		peerStatus.Peers.forEach(peer => {
 			let sel = ".-peer-id-" + peer.UserID;
 			let peerElt = elt.querySelector(sel)
 			if ( !peerElt ) {
-				let tpl = elt.querySelector(".-js-template-peer");
+				let tpl = single(".-js-template-peer-status");
 				if ( !tpl ) {
 					console.error("template not found");
 					return;

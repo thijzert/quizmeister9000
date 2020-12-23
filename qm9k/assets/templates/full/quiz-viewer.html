@@ -2,16 +2,39 @@
 
 <main class="quiz-viewer -dialog -medium" data-quizkey={{.Response.Quiz.QuizKey}}>
 
-	<section class="dialog -medium peer-status -js-update-peer-status">
-		<template class="-js-template-peer">
-			<svg><use fill="#a2a2a2" xlink:href="#avatar-neutral"/></svg>
-			<div class="-name -hide-mobile"></div>
-		</template>
+	<section class="dialog -medium">
+		<div class="peer-status"></div>
 	</section>
 
-	<section class="dialog -medium">
+	<section class="dialog -medium -js-quiz-global-start">
 		<div>
-			<button class="tfbutton -vote-continue -js-vote-continue -h50 -fullwidth">Continue</button>
+			<button class="tfbutton -vote-continue -js-vote-continue -h50 -fullwidth">Everybody's here; start the quiz</button>
+		</div>
+	</section>
+
+	<section class="dialog -medium -js-quiz-questions">
+		<div class="question-container">
+		</div>
+		<template class="-js-template-answer">
+			<div class="-header">
+				<div class="-number"></div>
+				<div class="-question"></div>
+			</div>
+			<div class="ipt -textarea">
+				<div><textarea placeholder="Type your answer here"></textarea></div>
+			</div>
+		</template>
+		<template class="-js-template-question">
+			<div class="-header">
+				<div class="-number">6</div>
+				<div class="peer-status -small"></div>
+			</div>
+			<div class="ipt -textarea">
+				<div><textarea placeholder="Write a short reminder for this question"></textarea></div>
+			</div>
+		</template>
+		<div>
+			<button class="tfbutton -vote-continue -js-vote-continue -h50 -disabled -fullwidth">Continue</button>
 		</div>
 	</section>
 
