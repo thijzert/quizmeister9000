@@ -4,6 +4,10 @@
 @import "../mixins/colour-macro";
 
 main.ui-showcase {
+	section {
+		@include background-colour( ui-background );
+		padding: 1rem 1.5rem;
+	}
 
 	section.-avatars {
 		> div {

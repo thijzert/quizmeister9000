@@ -2,10 +2,6 @@
 @import "../mixins/responsive";
 @import "../mixins/colour-macro";
 
-body {
-	@include background-colour( dark );
-}
-
 main.quiz-viewer {
 }
 

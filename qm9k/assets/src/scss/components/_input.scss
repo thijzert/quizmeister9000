@@ -73,6 +73,10 @@ main.-dialog {
 	section {
 		@include background-colour( ui-background );
 		max-width: 100%;
+
+		.tfbutton {
+			margin-bottom: 0.5rem;
+		}
 	}
 
 	&.-small {

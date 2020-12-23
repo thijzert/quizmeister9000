@@ -2,14 +2,3 @@
 @import "../mixins/responsive";
 @import "../mixins/colour-macro";
 
-body {
-	@include background-colour( dark );
-}
-
-main.profile {
-	section {
-		.tfbutton {
-			margin-bottom: 0.5rem;
-		}
-	}
-}

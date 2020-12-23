@@ -64,7 +64,7 @@ $colour-descriptors: (
 	ui-alert-act: $colour-secondary-2-2,
 
 	ui-background: $colour-mono-a,
-	ui-background-act: $colour-mono-b,
+	ui-background-act: lighten($colour-primary-4,23),
 	ui-text: $colour-mono-e,
 	ui-text-dim: $colour-mono-c,
 
