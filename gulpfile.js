@@ -32,7 +32,6 @@ let webpack         = require('webpack');
 let gulpif          = require('gulp-if');
 let argv            = require('yargs').argv;
 let named           = require('vinyl-named')
-let svgSprite       = require('gulp-svg-sprite');
 let babel           = require('gulp-babel');
 let changed         = require('gulp-changed');
 let csso            = require('gulp-csso');
@@ -44,7 +43,7 @@ let dependents      = require('gulp-dependents');
 const compileToES5 = function()
 {
 	let jsEntrypoints = [
-		"qm9k/assets/src/js/chat.js",
+		"qm9k/assets/src/js/qm9k.js",
 	];
 
 	let webpackConfig = {
@@ -119,7 +118,7 @@ const compileToES2015 = function()
 	});
 
 
-	return gulp.src([ "qm9k/assets/src/js/*.js" ]).
+	return gulp.src([ "qm9k/assets/src/js/**/*.js" ]).
 		pipe(changed("qm9k/assets/dist/js/", { hasChanged: changed.compareContents })).
 		pipe(gulpif(!argv.production, sourcemaps.init())).
 		pipe(localBabel).
@@ -137,7 +136,7 @@ const compileBothScripts = gulp.series( compileToES2015, compileToES5 );
 
 const watchScript = function()
 {
-	gulp.watch( [ "qm9k/assets/src/js/*.js" ], compileBothScripts );
+	gulp.watch( [ "qm9k/assets/src/js/**/*.js" ], compileBothScripts );
 };
 
 // Compile CSS
