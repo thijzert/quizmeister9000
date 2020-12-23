@@ -1,5 +1,4 @@
 
-
 .ipt {
 	margin-bottom: 1.25rem;
 
@@ -25,12 +24,22 @@
 		}
 	}
 
-	&.-text {
+	&.-dropdown, &.-text {
 		> label {
 			display: block;
 			@include text-colour( ui-text-dim );
 		}
+	}
+
+	&.-text {
 		input {
+			display: block;
+			width: 100%;
+		}
+	}
+
+	&.-dropdown {
+		select {
 			display: block;
 			width: 100%;
 		}
@@ -53,6 +62,30 @@ fieldset {
 		margin-bottom: unset;
 		> .ipt {
 			margin-bottom: unset;
+		}
+	}
+}
+
+main.-dialog {
+	display: flex;
+	justify-content: center;
+
+	section {
+		@include background-colour( ui-background );
+		max-width: 100%;
+	}
+
+	&.-small {
+		section {
+			width: 23rem;
+			padding: 1.5rem;
+		}
+	}
+
+	&.-medium {
+		section {
+			width: 45rem;
+			padding: 1.5rem;
 		}
 	}
 }

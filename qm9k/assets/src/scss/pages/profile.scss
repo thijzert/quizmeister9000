@@ -7,18 +7,7 @@ body {
 }
 
 main.profile {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-
 	section {
-		width: 23rem;
-		padding: 1.5rem;
-		@include background-colour( ui-background );
-
-		input[type=text], select {
-			width: 20rem;
-		}
 		.tfbutton {
 			margin-bottom: 0.5rem;
 		}
