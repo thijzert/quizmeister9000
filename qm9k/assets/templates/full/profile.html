@@ -12,22 +12,28 @@
 			{{$cp := .Response.CurrentProfile}}
 			<form method="POST" action="{{.AppRoot}}profile">
 				<fieldset>
-					<label for="nick">What is your name?</label>
-					<div><input type="text" name="nick" value="{{$cp.Nick}}" /></div>
+					<div class="ipt -text">
+						<label for="nick">What is your name?</label>
+						<div><input type="text" name="nick" value="{{$cp.Nick}}" /></div>
+					</div>
 				</fieldset>
 				<fieldset>
-					<label for="quest">What is your quest?</label>
-					<div><input type="text" name="quest" value="{{$cp.Quest}}" /></div>
+					<div class="ipt -text">
+						<label for="quest">What is your quest?</label>
+						<div><input type="text" name="quest" value="{{$cp.Quest}}" /></div>
+					</div>
 				</fieldset>
 				<fieldset>
-					<label for="colour">What is your favourite colour?</label>
-					<div>
-						<select class="kleurstaal" name="colour">
-							<option value="a8a8a8">-</option>
-							{{range $i, $c := .Response.AllColours}}
-								<option {{if eq ($c.Hex) ($cp.Colour)}}selected{{end}} value="{{$c.Hex}}">{{$c.Name}}</option>
-							{{end}}
-						</select>
+					<div class="ipt -text">
+						<label for="colour">What is your favourite colour?</label>
+						<div>
+							<select class="kleurstaal" name="colour">
+								<option value="a8a8a8">-</option>
+								{{range $i, $c := .Response.AllColours}}
+									<option {{if eq ($c.Hex) ($cp.Colour)}}selected{{end}} value="{{$c.Hex}}">{{$c.Name}}</option>
+								{{end}}
+							</select>
+						</div>
 					</div>
 				</fieldset>
 				<fieldset>

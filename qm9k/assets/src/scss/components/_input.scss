@@ -12,6 +12,7 @@
 		border-width: thin;
 		border-radius: 0.25rem;
 		@include border-colour( ui-main );
+		font-size: 18px;
 		line-height: 1.5rem;
 		padding: 0.75rem 1.25rem;
 
@@ -40,5 +41,18 @@
 		grid-template-columns: repeat( auto-fill, minmax(9rem, 1fr) );
 		grid-template-rows: auto;
 		grid-gap: 1.25rem;
+	}
+}
+
+fieldset {
+	border: 0;
+	padding: 0;
+	margin-bottom: 0.5rem;
+
+	&:last-child {
+		margin-bottom: unset;
+		> .ipt {
+			margin-bottom: unset;
+		}
 	}
 }

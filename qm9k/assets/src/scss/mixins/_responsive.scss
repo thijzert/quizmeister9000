@@ -1,7 +1,6 @@
 
 @mixin only-mobile() {
-	@media (max-width: $width-canvas-tablet - $width-epsilon)
-	{
+	@media (max-width: $width-canvas-tablet - $width-epsilon) {
 		@content;
 	}
 }
