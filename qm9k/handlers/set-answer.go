@@ -69,6 +69,7 @@ func SetAnswerHandler(s State, r Request) (State, Response, error) {
 
 	if thisRound.Quizmaster == s.User.UserID {
 		s.Quiz.Rounds[s.Quiz.CurrentRound].Questions[req.Question].Question = req.Text
+		s.Quiz.Rounds[s.Quiz.CurrentRound].CurrentQuestion = req.Question
 	} else {
 		found := false
 		for i, ans := range thisRound.Questions[req.Question].Answers {

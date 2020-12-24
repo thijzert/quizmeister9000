@@ -188,6 +188,16 @@ function questionFocus(e) {
 	if ( nd ) {
 		nd.classList.toggle("-focus", true);
 	}
+
+	if ( nd.classList.contains("question") ) {
+		let prev = nd.previousSibling;
+		let i = 0;
+		while ( prev ) {
+			i++;
+			prev = prev.previousSibling;
+		}
+		setAnswer( currentRound, i, mustSingleRef(nd,"textarea").value );
+	}
 }
 function questionBlur(e) {
 	let nd = closest( e.target, ".question,.answer" );
