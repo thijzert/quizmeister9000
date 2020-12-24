@@ -39,9 +39,11 @@ func PeerStatusHandler(s State, r Request) (State, Response, error) {
 	}
 
 	someoneHasTyped := false
+	var currentQuizMaster UserID
 	var answers []answer
 	if len(s.Quiz.Rounds) > s.Quiz.CurrentRound {
 		cr := s.Quiz.Rounds[s.Quiz.CurrentRound]
+		currentQuizMaster = cr.Quizmaster
 		if len(cr.Questions) > cr.CurrentQuestion {
 			answers = cr.Questions[cr.CurrentQuestion].Answers
 		}
@@ -68,6 +70,12 @@ func PeerStatusHandler(s State, r Request) (State, Response, error) {
 			Voted:  s.hasVoted(peer.UserID),
 		}
 
+		if currentQuizMaster == peer.UserID {
+			// The quiz master is always neutral
+		} else if someoneHasTyped {
+			pst.Status = "thinking"
+		}
+
 		if answers != nil {
 			for _, ans := range answers {
 				if ans.UserID != peer.UserID {
@@ -77,8 +85,6 @@ func PeerStatusHandler(s State, r Request) (State, Response, error) {
 					pst.Status = "writing"
 				} else if ans.Answer != "" {
 					pst.Status = "done"
-				} else if someoneHasTyped {
-					pst.Status = "thinking"
 				}
 			}
 		}

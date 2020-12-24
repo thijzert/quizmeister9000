@@ -10,7 +10,7 @@
 			<p>Who would pass the page of landing must answer me these questions three, ere the other side he see.</p>
 			{{end}}
 			{{$cp := .Response.CurrentProfile}}
-			<form method="POST" action="{{.AppRoot}}profile" autocomplete="off">
+			<form method="POST" action="profile" autocomplete="off">
 				<fieldset>
 					<div class="ipt -text">
 						<label for="nick">What is your name?</label>
@@ -41,7 +41,7 @@
 						<input type="hidden" name="save" value="1" />
 						{{if .Response.New}}<input type="hidden" name="new" value="1" />{{end}}
 						<input class="tfbutton -h50 -fullwidth" type="submit" value="Save" />
-						<a href="{{.AppRoot}}" class="tfbutton -transparent -h50 -fullwidth">Back</a>
+						<a href="." class="tfbutton -transparent -h50 -fullwidth">Back</a>
 					</div>
 				</fieldset>
 			</form>
