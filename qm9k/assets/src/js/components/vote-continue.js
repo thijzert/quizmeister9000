@@ -19,9 +19,9 @@ async function voteContinue(e) {
 	let rv;
 
 	if ( btn.classList.contains("-voted") ) {
-		rv = await postJSON("/vote-continue/"+quizkey, {vote: 0})
+		rv = await postJSON("vote-continue/"+quizkey, {vote: 0})
 	} else {
-		rv = await postJSON("/vote-continue/"+quizkey, {vote: 1})
+		rv = await postJSON("vote-continue/"+quizkey, {vote: 1})
 	}
 
 	setVoteStatus(rv.MyVote);

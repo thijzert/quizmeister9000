@@ -20,7 +20,7 @@ let wasFinished = false;
 
 async function updateQuizStatus() {
 	let quizkey = mustSingle("main").dataset["quizkey"];
-	let status = await getJSON("/quiz-status/"+quizkey)
+	let status = await getJSON("quiz-status/"+quizkey)
 
 	enableVoting(status.VotingEnabled);
 	setVoteStatus(status.MyVote);
@@ -110,7 +110,7 @@ async function updateQuizStatus() {
 			let gcont = mustSingle(".grading-container");
 			gcont.innerHTML = "";
 
-			let grading = await getJSON("/grade-answers/"+quizkey);
+			let grading = await getJSON("grade-answers/"+quizkey);
 			grading.Questions.forEach((q,i) => {
 				let ndq = document.createElement("DIV");
 				ndq.classList.add("question");
@@ -143,7 +143,7 @@ async function updateQuizStatus() {
 			let lb = mustSingle(".leaderboard-container");
 			lb.innerHTML = "";
 
-			let leaderboard = await getJSON("/leaderboard/"+quizkey);
+			let leaderboard = await getJSON("leaderboard/"+quizkey);
 
 			let lastScore = 0, lastPos = 0;
 
@@ -196,7 +196,7 @@ function questionBlur(e) {
 
 async function setAnswer(round, question, text) {
 	let quizkey = mustSingle("main").dataset["quizkey"];
-	let _ = await postJSON("/set-answer/"+quizkey, {round, question, text});
+	let _ = await postJSON("set-answer/"+quizkey, {round, question, text});
 }
 
 
@@ -206,7 +206,7 @@ async function updateGrading() {
 	}
 
 	let quizkey = mustSingle("main").dataset["quizkey"];
-	let grading = await getJSON("/grade-answers/"+quizkey);
+	let grading = await getJSON("grade-answers/"+quizkey);
 	readGrading(grading);
 }
 
@@ -218,7 +218,7 @@ async function applyGrade(e) {
 	let question = ndq.dataset["question"];
 
 	let quizkey = mustSingle("main").dataset["quizkey"];
-	let grading = await postJSON("/grade-answers/"+quizkey, {question, answer, score});
+	let grading = await postJSON("grade-answers/"+quizkey, {question, answer, score});
 	readGrading(grading);
 }
 

@@ -13,7 +13,7 @@ function setUpPeerStatus() {
 
 async function refreshPeerStatus() {
 	let quizkey = mustSingle("main").dataset["quizkey"];
-	let peerStatus = await getJSON("/peer-status/"+quizkey)
+	let peerStatus = await getJSON("peer-status/"+quizkey)
 
 	all(".peer-status").forEach(elt => {
 		peerStatus.Peers.forEach(peer => {
