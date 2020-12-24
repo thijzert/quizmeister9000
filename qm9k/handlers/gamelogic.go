@@ -111,7 +111,7 @@ func advanceQuiz(quiz Quiz) Quiz {
 
 			if len(quiz.Rounds[quiz.CurrentRound].Questions) == 0 {
 				// FIXME: remove hardcoded 10 questions per round
-				for i := 0; i < 2; i++ {
+				for i := 0; i < 10; i++ {
 					quiz.Rounds[quiz.CurrentRound].Questions = append(quiz.Rounds[quiz.CurrentRound].Questions, question{})
 				}
 			}
