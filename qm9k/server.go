@@ -66,6 +66,7 @@ func NewServer(c Config) (*Server, error) {
 
 	s.mux.Handle("/quiz/", s.HTMLFunc(handlers.QuizViewerHandler, handlers.QuizViewerDecoder, "full/quiz-viewer"))
 
+	s.mux.Handle("/grade-answers/", s.JSONFunc(handlers.GradeAnswerHandler, handlers.GradeAnswerDecoder))
 	s.mux.Handle("/peer-status/", s.JSONFunc(handlers.PeerStatusHandler, handlers.PeerStatusDecoder))
 	s.mux.Handle("/quiz-status/", s.JSONFunc(handlers.QuizStatusHandler, handlers.QuizStatusDecoder))
 	s.mux.Handle("/set-answer/", s.JSONFunc(handlers.SetAnswerHandler, handlers.SetAnswerDecoder))

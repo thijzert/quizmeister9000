@@ -43,6 +43,25 @@
 		</div>
 	</section>
 
+	<section class="dialog -medium -js-quiz-grading">
+		<div class="grading-container"></div>
+		<template class="-js-template-question">
+			<h3 class="-js-question"></h3>
+			<div class="answer-container"></div>
+		</template>
+		<template class="-js-template-answer">
+			<pre class="-js-answer"></pre>
+			<div class="-grade">
+				<div class="tfbutton -h40 -white -main -js-click-grade" data-score="0">Incorrect</div>
+				<div class="tfbutton -h40 -white -main -js-click-grade" data-score="1">¯\_(ツ)_/¯</div>
+				<div class="tfbutton -h40 -white -main -js-click-grade" data-score="2">Correct</div>
+			</div>
+		</template>
+		<div>
+			<button class="tfbutton -vote-continue -js-vote-continue -h50 -fullwidth">Continue</button>
+		</div>
+	</section>
+
 </main>
 
 {{end}}

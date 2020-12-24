@@ -33,5 +33,7 @@ func NewQuizHandler(s State, _ Request) (State, Response, error) {
 		}},
 	}
 
+	s.QuizDirty = true
+
 	return s, newQuizResponse{}, errRedirect{"quiz/" + string(s.Quiz.QuizKey)}
 }

@@ -1,14 +1,15 @@
 package handlers
 
 import (
-	"log"
-
 	"github.com/thijzert/speeldoos/lib/properrandom"
 )
 
 func (s State) votingEnabled() bool {
 	if !s.Quiz.Started {
 		return true
+	}
+	if s.Quiz.Finished {
+		return false
 	}
 
 	// If we're in the middle of a round, voting is enabled if you've answered
@@ -41,6 +42,28 @@ func (s State) votingEnabled() bool {
 				}
 			}
 		}
+	}
+
+	if s.Quiz.Started && !s.Quiz.Finished && s.Quiz.CurrentRound >= len(s.Quiz.Rounds) {
+		// We're grading answers
+
+		myRoundIdx := -1
+		for i, round := range s.Quiz.Rounds {
+			if round.Quizmaster == s.User.UserID {
+				myRoundIdx = i
+			}
+		}
+		if myRoundIdx >= 0 {
+			for _, q := range s.Quiz.Rounds[myRoundIdx].Questions {
+				for _, ans := range q.Answers {
+					if !ans.Scored {
+						return false
+					}
+				}
+			}
+		}
+
+		return true
 	}
 
 	return true
@@ -96,6 +119,8 @@ func advanceQuiz(quiz Quiz) Quiz {
 		return quiz
 	}
 
-	log.Printf("next stage ill-defined")
+	// That was all
+	quiz.Finished = true
+
 	return quiz
 }

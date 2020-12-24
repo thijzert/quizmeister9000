@@ -1,4 +1,4 @@
-import { closest, mustSingle, mustSingleRef, toggleIf } from "../lib/helpers.js";
+import { all, closest, mustSingle, mustSingleRef, onClick, toggleIf } from "../lib/helpers.js";
 import { getJSON, postJSON } from "../lib/post.js";
 import { enableVoting, setVoteStatus } from "../components/vote-continue.js";
 
@@ -7,9 +7,14 @@ export function quizMain() {
 
 	setInterval( updateQuizStatus, 1200 );
 	updateQuizStatus();
+
+	// setInterval( updateGrading, 600 );
+	onClick(".-js-click-grade", applyGrade);
 }
 
 let currentRound = -2;
+let wasGrading = false;
+let amGrading = false;
 
 async function updateQuizStatus() {
 	let quizkey = mustSingle("main").dataset["quizkey"];
@@ -96,13 +101,43 @@ async function updateQuizStatus() {
 			})
 		}
 	}
+	if ( status.QuizStatus.Grading ) {
+		if ( !wasGrading ) {
+			wasGrading = true;
+
+			let gcont = mustSingle(".grading-container");
+			gcont.innerHTML = "";
+
+			let grading = await getJSON("/grade-answers/"+quizkey);
+			grading.Questions.forEach((q,i) => {
+				let ndq = document.createElement("DIV");
+				ndq.classList.add("question");
+				ndq.innerHTML = mustSingle(".-js-quiz-grading .-js-template-question").innerHTML;
+				ndq.dataset["question"] = i;
+
+				mustSingleRef(ndq, ".-js-question").innerText = (i+1) + ": " + q.Question;
+
+				q.Answers.forEach(ans => {
+					let nda = document.createElement("DIV");
+					nda.classList.add("answer");
+					nda.innerHTML = mustSingle(".-js-quiz-grading .-js-template-answer").innerHTML;
+					nda.dataset["answer"] = ans.Answer;
+					mustSingleRef(nda, ".-js-answer").innerText = ans.Answer;
+					ndq.appendChild(nda);
+				});
+
+				gcont.appendChild(ndq);
+			});
+
+			amGrading = true;
+			readGrading(grading);
+		}
+	}
 
 	toggleIf( mustSingle(".-js-quiz-global-start"), !status.QuizStatus.Started )
 	toggleIf( mustSingle(".-js-quiz-questions"), status.QuizStatus.Started && !status.QuizStatus.Grading && !status.QuizStatus.Finished )
 	toggleIf( mustSingle(".-js-quiz-grading"), status.QuizStatus.Grading )
 	toggleIf( mustSingle(".-js-quiz-global-end"), status.QuizStatus.Finished )
-
-
 }
 
 function questionFocus(e) {
@@ -121,4 +156,46 @@ function questionBlur(e) {
 async function setAnswer(round, question, text) {
 	let quizkey = mustSingle("main").dataset["quizkey"];
 	let _ = await postJSON("/set-answer/"+quizkey, {round, question, text});
+}
+
+
+async function updateGrading() {
+	if ( !amGrading ) {
+		return;
+	}
+
+	let quizkey = mustSingle("main").dataset["quizkey"];
+	let grading = await getJSON("/grade-answers/"+quizkey);
+	readGrading(grading);
+}
+
+async function applyGrade(e) {
+	let score = e.target.dataset["score"];
+	let nda = closest(e.target, ".answer");
+	let answer = nda.dataset["answer"];
+	let ndq = closest(nda, ".question");
+	let question = ndq.dataset["question"];
+
+	let quizkey = mustSingle("main").dataset["quizkey"];
+	let grading = await postJSON("/grade-answers/"+quizkey, {question, answer, score});
+	readGrading(grading);
+}
+
+function readGrading(grading) {
+	let ndqs = all(".grading-container .question");
+	ndqs.forEach((ndq,i) => {
+		ndq.querySelectorAll(".answer").forEach(nda => {
+			let answer = nda.dataset["answer"];
+			grading.Questions[i].Answers.forEach(ans => {
+				if ( ans.Answer != answer ) {
+					return;
+				}
+
+				nda.querySelectorAll(".-grade .tfbutton").forEach(b => {
+					let selected = ans.Scored && (b.dataset["score"] == ans.Score);
+					b.classList.toggle("-white", !selected);
+				});
+			});
+		});
+	});
 }
