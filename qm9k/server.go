@@ -71,6 +71,7 @@ func NewServer(c Config) (*Server, error) {
 	s.mux.Handle("/quiz-status/", s.JSONFunc(handlers.QuizStatusHandler, handlers.QuizStatusDecoder))
 	s.mux.Handle("/set-answer/", s.JSONFunc(handlers.SetAnswerHandler, handlers.SetAnswerDecoder))
 	s.mux.Handle("/vote-continue/", s.JSONFunc(handlers.VoteHandler, handlers.VoteDecoder))
+	s.mux.Handle("/leaderboard/", s.JSONFunc(handlers.LeaderboardHandler, handlers.LeaderboardDecoder))
 
 	s.mux.HandleFunc("/assets/", s.serveStaticAsset)
 	// s.mux.HandleFunc("/", s.homeHandler)

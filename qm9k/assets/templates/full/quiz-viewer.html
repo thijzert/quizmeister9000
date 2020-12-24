@@ -2,7 +2,7 @@
 
 <main class="quiz-viewer -dialog -medium" data-quizkey={{.Response.Quiz.QuizKey}}>
 
-	<section class="dialog -medium">
+	<section class="dialog -medium -js-global-peer-status">
 		<div class="peer-status"></div>
 	</section>
 
@@ -44,6 +44,7 @@
 	</section>
 
 	<section class="dialog -medium -js-quiz-grading">
+		<h2>Grade the answers to your questions</h2>
 		<div class="grading-container"></div>
 		<template class="-js-template-question">
 			<h3 class="-js-question"></h3>
@@ -60,6 +61,21 @@
 		<div>
 			<button class="tfbutton -vote-continue -js-vote-continue -h50 -fullwidth">Continue</button>
 		</div>
+	</section>
+
+	<section class="dialog -medium -js-quiz-global-end">
+		<h2>Leaderboard</h2>
+		<div class="leaderboard-container"></div>
+		<template class="-js-template-contestant">
+			<div class="-avatar">
+				<svg><use xlink:href="#avatar-neutral"/></svg>
+			</div>
+			<div>
+				<h3 class="-nick"></h3>
+				<h4 class="-quest"></h4>
+				<h2 class="-score"></h2>
+			</div>
+		</template>
 	</section>
 
 </main>

@@ -68,5 +68,45 @@ main.quiz-viewer {
 			}
 		}
 	}
+
+	.grading-container {
+		.question {
+			margin-bottom: 2rem;
+		}
+	}
+
+	.leaderboard-container {
+		.contestant {
+			display: flex;
+
+			margin-bottom: 1.5rem;
+
+			>.-avatar {
+				min-width: 6rem;
+				max-width: 6rem;
+				margin-right: 1.5rem;
+				svg {
+					width: 6rem;
+					height: 6rem;
+				}
+			}
+
+			.-nick {
+				margin: 0 0 0.25rem 0;
+				font-size: 1.5rem;
+				font-weight: 400;
+			}
+			.-quest {
+				margin: 0 0 0.75rem 0;
+				font-size: 1rem;
+				font-weight: 400;
+			}
+			.-score {
+				margin: 0;
+				font-size: 1.75rem;
+				font-weight: 600;
+			}
+		}
+	}
 }
 

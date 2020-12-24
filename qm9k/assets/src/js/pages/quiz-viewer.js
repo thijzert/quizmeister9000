@@ -16,6 +16,8 @@ let currentRound = -2;
 let wasGrading = false;
 let amGrading = false;
 
+let wasFinished = false;
+
 async function updateQuizStatus() {
 	let quizkey = mustSingle("main").dataset["quizkey"];
 	let status = await getJSON("/quiz-status/"+quizkey)
@@ -134,10 +136,49 @@ async function updateQuizStatus() {
 		}
 	}
 
+	if ( status.QuizStatus.Finished ) {
+		if ( !wasFinished ) {
+			wasFinished = true;
+
+			let lb = mustSingle(".leaderboard-container");
+			lb.innerHTML = "";
+
+			let leaderboard = await getJSON("/leaderboard/"+quizkey);
+
+			let lastScore = 0, lastPos = 0;
+
+			leaderboard.Peers.forEach((p,i) => {
+				let ndc = document.createElement("DIV");
+				ndc.classList.add("contestant");
+				ndc.innerHTML = mustSingle(".-js-quiz-global-end .-js-template-contestant").innerHTML;
+
+				let pos = i+1;
+				if ( p.Score == lastScore ) {
+					pos = lastPos;
+				}
+				lastScore =  p.Score;
+				lastPos = pos;
+
+				mustSingleRef(ndc, ".-nick").innerText = `#${pos}: ${p.Nick}`;
+				mustSingleRef(ndc, ".-quest").innerText = `Quest: ${p.Quest}`;
+				mustSingleRef(ndc, ".-avatar svg use").setAttribute("fill", `#${p.Colour}`);
+
+				let score = Math.floor(p.Score).toString();
+				if ( p.Score % 2 == 1 ) {
+					score += "½";
+				}
+				mustSingleRef(ndc, ".-score").innerText = `Score: ${score}`;
+
+				lb.appendChild(ndc);
+			})
+		}
+	}
+
 	toggleIf( mustSingle(".-js-quiz-global-start"), !status.QuizStatus.Started )
 	toggleIf( mustSingle(".-js-quiz-questions"), status.QuizStatus.Started && !status.QuizStatus.Grading && !status.QuizStatus.Finished )
 	toggleIf( mustSingle(".-js-quiz-grading"), status.QuizStatus.Grading )
 	toggleIf( mustSingle(".-js-quiz-global-end"), status.QuizStatus.Finished )
+	toggleIf( mustSingle(".-js-global-peer-status"), !status.QuizStatus.Finished )
 }
 
 function questionFocus(e) {
