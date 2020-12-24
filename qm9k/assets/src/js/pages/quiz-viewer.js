@@ -69,6 +69,8 @@ async function updateQuizStatus() {
 				name.innerText = status.CurrentRound.QuizMaster.Nick;
 				title.appendChild(name);
 			}
+
+			window.setTimeout(() => { mustSingleRef(qcont, "textarea").focus(); }, 20);
 		}
 
 		let nQuestions = qcont.children.length;
