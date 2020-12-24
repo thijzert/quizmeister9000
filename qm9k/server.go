@@ -68,6 +68,7 @@ func NewServer(c Config) (*Server, error) {
 
 	s.mux.Handle("/peer-status/", s.JSONFunc(handlers.PeerStatusHandler, handlers.PeerStatusDecoder))
 	s.mux.Handle("/quiz-status/", s.JSONFunc(handlers.QuizStatusHandler, handlers.QuizStatusDecoder))
+	s.mux.Handle("/set-answer/", s.JSONFunc(handlers.SetAnswerHandler, handlers.SetAnswerDecoder))
 	s.mux.Handle("/vote-continue/", s.JSONFunc(handlers.VoteHandler, handlers.VoteDecoder))
 
 	s.mux.HandleFunc("/assets/", s.serveStaticAsset)
@@ -133,7 +134,7 @@ func (s *Server) setState(st handlers.State) error {
 	if !st.User.UserID.Empty() {
 		s.saveUser(st.User)
 	}
-	if !st.Quiz.QuizKey.Empty() {
+	if st.QuizDirty {
 		s.saveQuiz(st.Quiz)
 	}
 	return nil

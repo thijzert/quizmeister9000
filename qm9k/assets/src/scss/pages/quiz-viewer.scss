@@ -29,6 +29,10 @@ main.quiz-viewer {
 				align-items: end;
 				margin-bottom: 0.5rem;
 
+				> * {
+					height: min-content;
+				}
+
 				.-number {
 					font-size: 2.5rem;
 					line-height: 2.5rem;

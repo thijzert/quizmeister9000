@@ -9,8 +9,9 @@ import (
 
 // The State struct represents the current state of the world
 type State struct {
-	User User
-	Quiz Quiz
+	User      User
+	QuizDirty bool
+	Quiz      Quiz
 }
 
 // A UserID kind-of-uniquely identifies a user

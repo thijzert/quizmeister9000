@@ -68,13 +68,6 @@ func (s *Server) saveQuiz(q handlers.Quiz) {
 	s.quizLock.Lock()
 	defer s.quizLock.Unlock()
 
-	currentQ, ok := s.quizStore[q.QuizKey]
-	if ok {
-		if currentQ.Equals(q) {
-			return
-		}
-	}
-
 	log.Printf("saving quiz %s", q.QuizKey)
 	s.quizStore[q.QuizKey] = q
 

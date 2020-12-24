@@ -1,6 +1,6 @@
 import { closest, mustSingle, mustSingleRef, toggleIf } from "../lib/helpers.js";
-import { getJSON } from "../lib/post.js";
-import { enableVoting } from "../components/vote-continue.js";
+import { getJSON, postJSON } from "../lib/post.js";
+import { enableVoting, setVoteStatus } from "../components/vote-continue.js";
 
 export function quizMain() {
 	let qcont = mustSingle(".-js-quiz-questions .question-container")
@@ -16,6 +16,7 @@ async function updateQuizStatus() {
 	let status = await getJSON("/quiz-status/"+quizkey)
 
 	enableVoting(status.VotingEnabled);
+	setVoteStatus(status.MyVote);
 
 	if ( status.QuizStatus.Started && !status.QuizStatus.Grading && !status.QuizStatus.Finished ) {
 		let qcont = mustSingle(".-js-quiz-questions .question-container")
@@ -63,6 +64,8 @@ async function updateQuizStatus() {
 			}
 		}
 
+		let nQuestions = qcont.children.length;
+
 		if ( status.CurrentRound.ThisIsMe ) {
 			qcont.querySelectorAll(".question").forEach((ndq, i) => {
 				const q = status.CurrentRound.Questions[i];
@@ -70,18 +73,26 @@ async function updateQuizStatus() {
 					return;
 				}
 
-				// TODO: check textareas for changes, and save
+				// Check textareas for changes, and save if they're different
+				let txt = mustSingleRef(ndq,"textarea");
+				if ( txt.value != q.Question ) {
+					setTimeout(() => { setAnswer( currentRound, i, txt.value ) }, 50*(nQuestions-i));
+				}
 			})
 		} else {
-			qcont.querySelectorAll(".question").forEach((ndq, i) => {
+			qcont.querySelectorAll(".answer").forEach((ndq, i) => {
 				const q = status.CurrentRound.Questions[i];
 				if ( !q ) {
 					return;
 				}
 
-				mustSingleRef(ndq, "-question").innerText = q.Question;
+				mustSingleRef(ndq, ".-question").innerText = q.Question;
 
-				// TODO: check textareas for changes, and save
+				// Check textareas for changes, and save if they're different
+				let txt = mustSingleRef(ndq,"textarea");
+				if ( txt.value != q.MyAnswer ) {
+					setTimeout(() => { setAnswer( currentRound, i, txt.value ) }, 50*(nQuestions-i));
+				}
 			})
 		}
 	}
@@ -105,4 +116,9 @@ function questionBlur(e) {
 	if ( nd ) {
 		nd.classList.toggle("-focus", false);
 	}
+}
+
+async function setAnswer(round, question, text) {
+	let quizkey = mustSingle("main").dataset["quizkey"];
+	let _ = await postJSON("/set-answer/"+quizkey, {round, question, text});
 }

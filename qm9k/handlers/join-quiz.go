@@ -47,6 +47,7 @@ func JoinHandler(s State, r Request) (State, Response, error) {
 			s.Quiz.Rounds = append(s.Quiz.Rounds, round{
 				Quizmaster: s.User.UserID,
 			})
+			s.QuizDirty = true
 		}
 
 		return s, rv, errRedirect{"quiz/" + string(s.Quiz.QuizKey)}

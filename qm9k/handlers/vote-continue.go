@@ -47,6 +47,8 @@ func VoteHandler(s State, r Request) (State, Response, error) {
 	}
 
 	if req.Voted && rv.VotingEnabled {
+		s.QuizDirty = true
+
 		idx := -1
 		if s.Quiz.Votes != nil {
 			for i, uid := range s.Quiz.Votes {

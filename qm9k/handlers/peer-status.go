@@ -74,7 +74,7 @@ func PeerStatusHandler(s State, r Request) (State, Response, error) {
 					continue
 				}
 				if time.Since(ans.Timestamp) < 2500*time.Millisecond {
-					pst.Status = "typing"
+					pst.Status = "writing"
 				} else if ans.Answer != "" {
 					pst.Status = "done"
 				} else if someoneHasTyped {
