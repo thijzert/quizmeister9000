@@ -14,6 +14,8 @@ func (s *Server) initialiseQuizStore() error {
 	defer s.quizLock.Unlock()
 
 	s.quizStore = make(map[handlers.QuizKey]handlers.Quiz)
+	s.quizByAccesskey = make(map[string]handlers.QuizKey)
+
 	f, err := os.Open(path.Join(s.config.BDFATFJF, "quiz-store.json"))
 	defer f.Close()
 	if err != nil {
@@ -29,7 +31,6 @@ func (s *Server) initialiseQuizStore() error {
 		return err
 	}
 
-	s.quizByAccesskey = make(map[string]handlers.QuizKey)
 	for qkey, quiz := range s.quizStore {
 		if !quiz.Started && quiz.AccessCode != "" {
 			s.quizByAccesskey[quiz.AccessCode] = qkey
