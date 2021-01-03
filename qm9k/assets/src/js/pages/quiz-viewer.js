@@ -62,7 +62,7 @@ async function updateQuizStatus() {
 
 			let title = mustSingle(".-js-quiz-questions h3")
 			if ( status.CurrentRound.ThisIsMe ) {
-				title.innerHTML = "This is you.";
+				title.innerHTML = "This round is yours. Read your questions, and enter a short reminder below.";
 			} else {
 				title.innerHTML = "Please direct your attention to: ";
 				let name = document.createElement("STRONG");

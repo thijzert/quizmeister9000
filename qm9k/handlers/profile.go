@@ -87,7 +87,7 @@ func ProfileHandler(s State, r Request) (State, Response, error) {
 
 func init() {
 	secretAPIKey = string(NewQuizKey()) + string(NewQuizKey())
-	log.Printf("Enter quest '%s' for admin access", secretAPIKey)
+	log.Printf("Enter '%s' as your 'quest' to get admin access", secretAPIKey)
 
 	colourList = []colour{
 		{Name: "Absolute Zero", Hex: "0048BA"},
