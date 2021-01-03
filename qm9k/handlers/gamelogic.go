@@ -6,6 +6,11 @@ import (
 
 func (s State) votingEnabled() bool {
 	if !s.Quiz.Started {
+		if len(s.Quiz.Contestants) < 2 {
+			// We can't start the quiz until at least 2 people show up
+			return false
+		}
+
 		return true
 	}
 	if s.Quiz.Finished {
