@@ -84,7 +84,7 @@ async function updateQuizStatus() {
 
 				// Check textareas for changes, and save if they're different
 				let txt = mustSingleRef(ndq,"textarea");
-				if ( txt.value != q.Question ) {
+				if ( normalise(txt.value) != normalise(q.Question) ) {
 					setTimeout(() => { setAnswer( currentRound, i, txt.value ) }, 50*(nQuestions-i));
 				}
 			})
@@ -99,7 +99,7 @@ async function updateQuizStatus() {
 
 				// Check textareas for changes, and save if they're different
 				let txt = mustSingleRef(ndq,"textarea");
-				if ( txt.value != q.MyAnswer ) {
+				if ( normalise(txt.value) != normalise(q.MyAnswer) ) {
 					setTimeout(() => { setAnswer( currentRound, i, txt.value ) }, 50*(nQuestions-i));
 				}
 			})
@@ -252,3 +252,10 @@ function readGrading(grading) {
 		});
 	});
 }
+
+function normalise( str ) {
+	str = str.replace(/\r/g, "");
+	str = str.replace(/\n/g, " ");
+	return str;
+}
+

@@ -4,6 +4,7 @@ import (
 	"errors"
 	"net/http"
 	"strconv"
+	"strings"
 )
 
 type gradeAnswerRequest struct {
@@ -97,7 +98,7 @@ func GradeAnswerHandler(s State, r Request) (State, Response, error) {
 		}
 
 		for i, ans := range questions[req.Question].Answers {
-			if ans.Answer == req.Answer {
+			if normaliseNewlines(ans.Answer) == normaliseNewlines(req.Answer) {
 				questions[req.Question].Answers[i].Score = req.Score
 				questions[req.Question].Answers[i].Scored = true
 			}
@@ -110,7 +111,7 @@ func GradeAnswerHandler(s State, r Request) (State, Response, error) {
 	for _, q := range questions {
 		answers := make(map[string]gradedAnswer)
 		for _, ans := range q.Answers {
-			answers[ans.Answer] = gradedAnswer{
+			answers[normaliseNewlines(ans.Answer)] = gradedAnswer{
 				Answer: ans.Answer,
 				Scored: ans.Scored,
 				Score:  ans.Score,
@@ -127,4 +128,10 @@ func GradeAnswerHandler(s State, r Request) (State, Response, error) {
 	}
 
 	return s, rv, nil
+}
+
+func normaliseNewlines(str string) string {
+	str = strings.Replace(str, "\r", "", -1)
+	str = strings.Replace(str, "\n", " ", -1)
+	return str
 }
